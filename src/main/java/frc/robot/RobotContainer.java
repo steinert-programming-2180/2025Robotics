@@ -17,10 +17,10 @@ import frc.robot.commands.SetWristToAngle;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+// import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -63,4 +63,28 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
   }
+
+  
+  private void pS5ConfigureButtonBindings() {
+
+    //   m_ps5driverController.triangle().onTrue().onFalse();
+    //   m_ps5driverController.cross().onTrue().onFalse();
+  
+    //   m_ps5driverController.R2().onTrue().onFalse();
+  
+    //   m_ps5driverController.circle().onTrue().onFalse();
+    //   m_ps5driverController.square().onTrue().onFalse();
+  
+    //   m_ps5driverController.R1().onTrue().toggleOnFalse();
+    //   m_ps5driverController.L1().onTrue().toggleOnFalse();
+  
+    //   m_ps5driverController.povUp().onTrue();
+    //   m_ps5driverController.povDown().onTrue();
+    
+    //   m_driverController.povLeft().onTrue();
+    //   m_driverController.povRight().onTrue().onFalse();
+    //   //m_ps5driverController.povUp().onTrue();
+
+
+}
 }
