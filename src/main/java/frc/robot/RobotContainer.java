@@ -14,13 +14,15 @@ import frc.robot.commands.IntakeReverse;
 import frc.robot.commands.SetArmToDistance;
 import frc.robot.commands.SetBaseToAngle;
 import frc.robot.commands.SetWristToAngle;
+import frc.robot.commands.SpinTestMotors;
+import frc.robot.commands.StopTestMotors;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
-// import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -31,6 +33,9 @@ public class RobotContainer {
   private final AlgaeReverse algaeReverse=new AlgaeReverse(arm);
   private final IntakeForward intakeForward=new IntakeForward(arm);
   private final IntakeReverse intakeReverse=new IntakeReverse(arm);
+
+  private final SpinTestMotors spinTestMotors=new SpinTestMotors(arm);
+  private final StopTestMotors stopTestMotors=new StopTestMotors(arm);
 
   //To do: make an enumerated list that lets desired angle/distance be altered without making new commands
   private final SetArmToDistance setArmToDistance=new SetArmToDistance(arm, 20);
@@ -48,6 +53,9 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    PS5Controller.square().onTrue(spinTestMotors);
+    PS5Controller.square().onFalse(stopTestMotors);
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

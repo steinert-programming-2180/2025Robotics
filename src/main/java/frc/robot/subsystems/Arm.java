@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PhysicalConstants;
+import frc.robot.Constants.testConstants;
 
 
 public class Arm {
@@ -21,6 +22,9 @@ public class Arm {
 
     private SparkFlex intakeMotor;
     private SparkFlex algaeMotor;
+
+    private SparkFlex testMotor1;
+    private SparkFlex testMotor2;
 
     private SparkFlexConfig armBaseConfig;
     private SparkFlexConfig armExtendConfig;
@@ -34,6 +38,9 @@ public class Arm {
         armBaseMotor=new SparkFlex(ArmConstants.armBaseMotorPort, MotorType.kBrushless);
         armExtendMotor=new SparkFlex(ArmConstants.armExtendMotorPort, MotorType.kBrushless);
         armWristMotor=new SparkFlex(ArmConstants.armWristMotorPort, MotorType.kBrushless);
+
+        testMotor1=new SparkFlex(testConstants.motor1Id, MotorType.kBrushless);
+        testMotor2=new SparkFlex(testConstants.motor2Id, MotorType.kBrushless);
 
         intakeMotor=new SparkFlex(ArmConstants.intakeMotorPort, MotorType.kBrushless);
         algaeMotor=new SparkFlex(ArmConstants.algaeMotorPort, MotorType.kBrushless);
@@ -121,5 +128,15 @@ public class Arm {
 
     public void reverseAlgae(){
         algaeMotor.set(-ArmConstants.algaeSpeed);
+    }
+
+    public void spinTestMotors(){
+        testMotor1.set(0.8);
+        testMotor2.set(0.8);
+    }
+
+    public void stopTestMotors(){
+        testMotor1.set(0);
+        testMotor2.set(0);
     }
 }

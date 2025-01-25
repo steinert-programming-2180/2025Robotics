@@ -45,4 +45,9 @@ public final class Constants {
     public static final double armWristI=0;
     public static final double armWristD=0;
   }
+
+  public static class testConstants{
+    public static final int motor1Id = 10;
+    public static final int motor2Id = 11;
+  }
 }
