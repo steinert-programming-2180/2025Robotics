@@ -230,8 +230,11 @@ public class SwerveMod implements SwerveModule
         // desiredState = CTREModuleState.optimize(desiredState, getState().angle);
         
         desiredState = this.optimize(desiredState, getState().angle.minus(Rotation2d.fromDegrees(180)));
+
+        
         setSpeed(desiredState, isOpenLoop);
         setAngle(desiredState);
+
 
         if(mDriveMotor.getFaults().sensor)
         {

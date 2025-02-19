@@ -36,6 +36,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.IntakeReverse;
+import frc.robot.commands.SetBaseToAngle;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -47,7 +48,7 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class RobotContainer {
     // private final RobotContainer m_RobotContainer = new RobotContainer();
-    // private final Arm m_Arm = new Arm(); 
+    private final Arm m_Arm = new Arm(); 
     // private final IntakeReverse m_IntakeReverse = new IntakeReverse(m_Arm);
     // private final IntakeForward m_IntakeForward = new IntakeForward(m_Arm);
     
@@ -78,6 +79,9 @@ public class RobotContainer {
     private final JoystickButton triangle = new JoystickButton(driver, PS5Controller.Button.kTriangle.value);
     private final JoystickButton circle = new JoystickButton(driver, PS5Controller.Button.kCircle.value);
     private final JoystickButton cross = new JoystickButton(driver, PS5Controller.Button.kCross.value);
+
+    private final SetBaseToAngle setBase40Degrees = new SetBaseToAngle(m_Arm, 40.0);
+    
     
     CommandPS5Controller m_ps5driverController = new CommandPS5Controller(Constants.OperatorConstants.PS5ControllerPort);
 

@@ -21,7 +21,7 @@ public class SetBaseToAngle extends Command {
     }
 
     public boolean isFinished(){
-        if(Arm.baseError<0.1){
+        if(Arm.baseError<=0.1){
             return true;
         }
         return false;

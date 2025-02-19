@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4917500000000001,
+        "y": 7.164499999999999
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2841151650138194,
+        "y": 6.431537011200644
+      },
+      "isLocked": false,
+      "linkedName": "BlueIntakeLeft"
+    },
+    {
+      "anchor": {
+        "x": 3.6464999999999996,
+        "y": 5.16575
+      },
+      "prevControl": {
+        "x": 2.866518070388204,
+        "y": 5.88438211116015
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BlueReef1B"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5302904564315367,
+      "rotationDegrees": -57.2707128995645
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Level4Score",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -59.82647997035562
+  },
+  "reversed": false,
+  "folder": "BlueScoringAutos",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -53.36588612403257
+  },
+  "useDefaultConstraints": true
+}

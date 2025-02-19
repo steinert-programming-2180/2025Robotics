@@ -83,8 +83,8 @@ public class Arm  extends SubsystemBase{
     }
 
     public void rotateBase(double desiredAngle){
-        baseError=Math.abs(armBaseMotor.getAbsoluteEncoder().getPosition()-desiredAngle);
-        
+        baseError = Math.abs(armBaseMotor.getAbsoluteEncoder().getPosition()-desiredAngle);
+    
         if(baseError>=0.1){
         armBaseMotor.getClosedLoopController().setReference(desiredAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         }
@@ -97,29 +97,5 @@ public class Arm  extends SubsystemBase{
         if(extentionError>=0.1){
         armWristMotor.getClosedLoopController().setReference(desiredDistance, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         }
-    }
-    
-    public void rotateWrist(double desiredAngle){
-        wristError=Math.abs(armExtendMotor.getAbsoluteEncoder().getPosition()-desiredAngle);
-
-        if(wristError>=0.1){
-        armWristMotor.getClosedLoopController().setReference(desiredAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        }
-    }
-
-    public void spinIntake(){
-        intakeMotor.set(ArmConstants.intakeSpeed);
-    }
-
-    public void spinAlgae(){
-        algaeMotor.set(ArmConstants.algaeSpeed);
-    }
-
-    public void reverseIntake(){
-        intakeMotor.set(-ArmConstants.intakeSpeed);
-    }
-
-    public void reverseAlgae(){
-        algaeMotor.set(-ArmConstants.algaeSpeed);
     }
 }

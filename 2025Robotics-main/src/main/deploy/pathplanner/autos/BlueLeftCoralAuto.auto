@@ -1,0 +1,146 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueLeftReef6A"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmToL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueLeftConnectorPathToIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmToIntakePosition"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueIntakeToReef1B"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmToL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueReef1BToIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmToIntakePosition"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "IntakeToReef1A"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmToL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueReef1AtoIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmToIntakePosition"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueIntakeToReef2A"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmToL4"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

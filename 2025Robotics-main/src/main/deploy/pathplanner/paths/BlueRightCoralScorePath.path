@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.339189189189188,
-        "y": 2.8878378378378375
+        "x": 5.370491803278688,
+        "y": 2.7962602459016397
       },
       "prevControl": {
-        "x": 5.088964441045755,
-        "y": 2.960951473147387
+        "x": 5.120267055135256,
+        "y": 2.8693738812111893
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -58.736268305622524
+    "rotation": 120.71947151928809
   },
   "reversed": false,
-  "folder": "BlueBeginnerPaths",
+  "folder": "Unc Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

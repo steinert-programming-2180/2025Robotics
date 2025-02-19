@@ -29,10 +29,10 @@ public final class Constants {
 
     public static Translation2d[] getModuleTranslations() {
         return new Translation2d[] {
-            new Translation2d(0.283, 0.283),
-            new Translation2d(0.283, -0.283),
-            new Translation2d(-0.283, 0.283),
-            new Translation2d(-0.283, -0.283)
+            new Translation2d(0.273, 0.273),
+            new Translation2d(0.273, -0.273),
+            new Translation2d(-0.273, 0.273),
+            new Translation2d(-0.273, -0.273)
         };
     }
 
@@ -48,7 +48,22 @@ public final class Constants {
         public static final double PS5ControllerRumble = 1; // Intensity of controller rumbling
     }
 
+    public static class wristConstants{
+
+        public static final double wristRotationMotorkP = 0;
+        public static final double wristRotationMotorkI = 0;
+        public static final double wristRotationMotorkD = 0;
+
+
+        public static final int wristMotorRotation = 20;
+        public static final int wristMotorCoral = 21;
+        public static final int wristMotorAlgae = 22; 
+        
+        
+    }
+
     public static class ArmConstants{
+
         public static final int armBaseMotorPort=10;
         public static final int armExtendMotorPort=11;
         public static final int armWristMotorPort=12;

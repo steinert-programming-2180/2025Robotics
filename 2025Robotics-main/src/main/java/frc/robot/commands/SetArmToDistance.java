@@ -17,7 +17,7 @@ public class SetArmToDistance extends Command {
     }
 
     public void execute(){
-        arm.rotateWrist(desiredDistance);
+        arm.extendArm(desiredDistance);
     }
 
     public boolean isFinished(){

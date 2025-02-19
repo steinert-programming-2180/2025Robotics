@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.3527499999999995,
+        "y": 5.204749999999999
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.4320000000000004,
+        "y": 6.404
+      },
+      "isLocked": false,
+      "linkedName": "BlueLeftReef6EndPoint"
+    },
+    {
+      "anchor": {
+        "x": 1.4917500000000001,
+        "y": 7.164499999999999
+      },
+      "prevControl": {
+        "x": 2.3205,
+        "y": 6.140750000000001
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BlueIntakeLeft"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2514522821576807,
+      "rotationDegrees": -99.54950264917252
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "CoralIntake",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -53.36588612403257
+  },
+  "reversed": false,
+  "folder": "BlueConnectorPaths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -120.01836742760906
+  },
+  "useDefaultConstraints": true
+}
