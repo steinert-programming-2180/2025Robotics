@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -27,17 +28,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.TeleopSwerve;
+// import frc.robot.commands.TopTilt;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Limelight;
 import frc.robot.Constants.OperatorConstants;
+// import frc.robot.commands.BottomTilt;
+// import frc.robot.commands.IncrementServo;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.IntakeReverse;
-import frc.robot.commands.SetBaseToAngle;
+// import frc.robot.commands.NeutralTilt;
+import frc.robot.commands.SetArmToAngle;
 import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -48,7 +56,9 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class RobotContainer {
     // private final RobotContainer m_RobotContainer = new RobotContainer();
-    private final Arm m_Arm = new Arm(); 
+    
+    private final Wrist m_Wrist = new Wrist();
+    private final Limelight m_Limelight = new Limelight();
     // private final IntakeReverse m_IntakeReverse = new IntakeReverse(m_Arm);
     // private final IntakeForward m_IntakeForward = new IntakeForward(m_Arm);
     
@@ -75,16 +85,27 @@ public class RobotContainer {
     private final POVButton right = new POVButton(driver, 180);
     private final POVButton left = new POVButton(driver, 0);
 
+    public final JoystickButton leftBumper = new JoystickButton(driver, PS5Controller.Button.kL1.value);
+    public final JoystickButton rightBumper = new JoystickButton(driver, PS5Controller.Button.kR1.value);
+
+    private final JoystickButton leftTrigger = new JoystickButton(driver, PS5Controller.Button.kL2.value);
+    private final JoystickButton rightTrigger = new JoystickButton(driver, PS5Controller.Button.kR2.value);
+
+
     private final JoystickButton square = new JoystickButton(driver, PS5Controller.Button.kSquare.value);
     private final JoystickButton triangle = new JoystickButton(driver, PS5Controller.Button.kTriangle.value);
     private final JoystickButton circle = new JoystickButton(driver, PS5Controller.Button.kCircle.value);
     private final JoystickButton cross = new JoystickButton(driver, PS5Controller.Button.kCross.value);
 
-    private final SetBaseToAngle setBase40Degrees = new SetBaseToAngle(m_Arm, 40.0);
-    
+    private final Arm m_Arm = new Arm(leftBumper, rightBumper); 
+
+    // private final SetBaseToAngle setBase40Degrees = new SetBaseToAngle(m_Arm, 40.0);
+    // private final SetBaseToAngle setBase180Degrees = new SetBaseToAngle(m_Arm, 180);
+    // private final SetBaseToAngle setBase270Degrees = new SetBaseToAngle(m_Arm, 270);
+    // private final SetBaseToAngle setBase360Degrees = new SetBaseToAngle(m_Arm, 360);
     
     CommandPS5Controller m_ps5driverController = new CommandPS5Controller(Constants.OperatorConstants.PS5ControllerPort);
-
+    CommandXboxController m_LimelightController = new CommandXboxController(1);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -92,13 +113,12 @@ public class RobotContainer {
 
     private final Auto m_auto = new Auto(s_Swerve);
 
-    Trigger rumblePS5Trigger;
+    // Trigger rumblePS5Trigger;
 
     // The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
     
         DataLogManager.getLog();
-
 
         // rumblePS5Trigger = new Trigger(DriverStation::isTeleopEnabled).onTrue(Commands.waitSeconds(Constants.ps5RumbleWarningTime).andThen(m_Ps5Rumble));
         
@@ -129,6 +149,30 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+
+
+
+
+
+
+
+
+
+
+        PS4Controller testController = new PS4Controller(0);
+        // new Trigger(testController::getSquareButton).onTrue(new TopTilt(m_Limelight));   
+        // new Trigger(testController::getTriangleButton).onTrue(new BottomTilt(m_Limelight));
+        // new Trigger(testController::getCircleButton).onTrue(new NeutralTilt(m_Limelight));
+
+        XboxController LimeController = new XboxController(0);
+        // new Trigger(LimeController::getYButtonPressed).onTrue(new IncrementServo(m_Limelight));
+
+
+
+
+        
+
+
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
@@ -154,10 +198,26 @@ public class RobotContainer {
 
         //square.onTrue(s_Swerve.sysIdDynamic(s_Swerve.sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward)));
         // why?
-        square.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        circle.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        triangle.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        cross.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        // square.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        // circle.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // triangle.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        // cross.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        cross.onTrue(new InstantCommand(() -> m_Arm.retractArm()));
+        cross.onFalse(new InstantCommand(() -> m_Arm.stopRetract()));
+
+        // if (leftBumper.getAsBoolean()) {
+        //     m_Arm.rotate(0.2);
+        // } else if (rightBumper.getAsBoolean()) {
+        //     m_Arm.rotate(-0.2);
+        // } else {
+        //     m_Arm.stopRotating();
+        // }
+        // leftBumper.whileTrue(new InstantCommand(() -> m_Arm.rotate(0.2)));
+        // rightBumper.whileTrue(new InstantCommand(() -> m_Arm.rotate(-0.2)));
+
+        circle.onTrue(new InstantCommand(() -> m_Arm.setAngle(75)));
+        triangle.onTrue(new InstantCommand(() -> m_Arm.setAngle(90)));
+
     }
 
     public void ps5ControllerRumble(){

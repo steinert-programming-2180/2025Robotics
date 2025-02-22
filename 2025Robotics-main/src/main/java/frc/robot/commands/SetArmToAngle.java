@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 
-public class SetBaseToAngle extends Command {
+public class SetArmToAngle extends Command {
 
     Arm arm;
     double desiredAngle;
-    public SetBaseToAngle(Arm arm, double desiredAngle){
+    public SetArmToAngle(Arm arm, double desiredAngle){
         this.arm=arm;
         this.desiredAngle=desiredAngle;
     }

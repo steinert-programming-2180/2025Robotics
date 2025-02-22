@@ -48,12 +48,34 @@ public final class Constants {
         public static final double PS5ControllerRumble = 1; // Intensity of controller rumbling
     }
 
+
+    public static final class LimelightConstants {
+        public static final double LIME_ANGLE = 0;
+        public static final double LIME_HEIGHT = 0;
+        public static final double LIME_TILTUP = 100;
+        public static final double LIME_TILTDOWN = 55;
+        public static final double LIME_TILTNEUTRAL = 80;
+        public static final int LIME_SERVO = 1;
+      }
+    public static class FieldConstants{
+        public static final double TARGET_MAX_HEIGHT = 0;
+    }
+
+    public static double inchesToMeters(double d){
+        return d * 0.024;
+    }
+
     public static class wristConstants{
+        
+        public static final int beamBreakSensorRioID = 0;
 
         public static final double wristRotationMotorkP = 0;
         public static final double wristRotationMotorkI = 0;
         public static final double wristRotationMotorkD = 0;
 
+
+        public static final double wristMotorCoralSpeed = 0.5; // speed for having the wrist motor for intake
+        public static final double wristMotorAlgaeSpeed = 0.5; // speed for having the algae motor for intake
 
         public static final int wristMotorRotation = 20;
         public static final int wristMotorCoral = 21;
@@ -64,20 +86,21 @@ public final class Constants {
 
     public static class ArmConstants{
 
-        public static final int armBaseMotorPort=10;
-        public static final int armExtendMotorPort=11;
-        public static final int armWristMotorPort=12;
+        public static final int armFollowMotorPort = 10;
+        public static final int armBaseMotorPort = 11;
+        public static final int armExtendMotorPort = 12;
+        public static final int armWristMotorPort = 13;
     
-        public static final int intakeMotorPort=13;
-        public static final int algaeMotorPort=14;
+        public static final int intakeMotorPort = 14;
+        public static final int algaeMotorPort = 15;
     
-        public static final double intakeSpeed=0.8;
-        public static final double algaeSpeed=0.75;
+        public static final double intakeSpeed = 0.8;
+        public static final double algaeSpeed = 0.75;
     
     
-        public static final double armBaseP=0.05;
+        public static final double armBaseP=0.06;
         public static final double armBaseI=0;
-        public static final double armBaseD=0;
+        public static final double armBaseD=0.7;
     
         public static final double armExtendP=0.05;
         public static final double armExtendI=0;
@@ -86,8 +109,12 @@ public final class Constants {
         public static final double armWristP=0.05;
         public static final double armWristI=0;
         public static final double armWristD=0;
-    }
 
+        public static final double armZeroPos=74.5;
+
+        public static final int bottomLimitSwitchID=0;
+        public static final int topLimitSwitchID=999;
+    }
     public static class AutoConstans{
 
         public static final String parseErrorMessage = "JSON_CANNOT_BE_PARSED";

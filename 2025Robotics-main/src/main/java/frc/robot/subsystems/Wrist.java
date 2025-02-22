@@ -31,10 +31,14 @@ public DigitalInput wristBeamBreak;
 
 
     public Wrist(){
-        wristBeamBreak = new DigitalInput(Constants.wristConstants.beamBreakSensorRioID);
+        // wristBeamBreak = new DigitalInput(Constants.wristConstants.beamBreakSensorRioID);
         wristMotorRotation = new SparkMax (Constants.wristConstants.wristMotorRotation, MotorType.kBrushless);
         wristMotorCoral = new SparkMax (Constants.wristConstants.wristMotorCoral, MotorType.kBrushless);
         wristMotorAlgae = new SparkMax (Constants.wristConstants.wristMotorAlgae, MotorType.kBrushless);
+
+        wristMotorRotationConfig = new SparkMaxConfig();
+        wristMotorAlgaeConfig = new SparkMaxConfig();
+        wristMotorCoralConfig = new SparkMaxConfig();
 
         configureMotors();
     }
