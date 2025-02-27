@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -14,6 +15,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +55,8 @@ public class Arm  extends SubsystemBase{
 
     private double baseArmSpeed;
 
+    private PIDController baseAngleController;
+
     public Arm(JoystickButton leftBumper, JoystickButton rightBumper) {
 
         this.leftBumper = leftBumper;
@@ -72,6 +76,8 @@ public class Arm  extends SubsystemBase{
 
         armExtendConfig = new SparkMaxConfig();
 
+        // baseAngleController = new PIDController(ArmConstants.armBaseP, ArmConstants.armBaseI, ArmConstants.armBaseD);
+
         baseArmSpeed = 0.2;
 
         configMotors();
@@ -81,7 +87,7 @@ public class Arm  extends SubsystemBase{
         armBaseConfig
         .inverted(false)
         .idleMode(IdleMode.kBrake)
-        .closedLoopRampRate(0.3);
+        .closedLoopRampRate(0.2);
 
         armBaseConfig.absoluteEncoder
         .positionConversionFactor(360)
@@ -138,10 +144,6 @@ public class Arm  extends SubsystemBase{
         }
     }
 
-    public double getAngle() {
-        return angleEncoder.getPosition();
-    }
-
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Rotate Angle", getAngle());
@@ -188,14 +190,21 @@ public class Arm  extends SubsystemBase{
 
     public void setAngle(double angle) {
         if (!atBottomLimit() || angle > 30.0) {
+
             armBaseMotor.getClosedLoopController().setReference(
             //Normal PID stuff
             angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, 
             //FeedForward :(
-            Math.sin(angle-getAngle())/3, ArbFFUnits.kPercentOut);
+            Math.cos(getAngle() - ArmConstants.armZeroPos + 90) * 0.05, ArbFFUnits.kPercentOut);
         } else {
             armBaseMotor.set(0.0);
         }
+
+        // Math.sin(angle - getAngle()) / 4, ArbFFUnits.kPercentOut);
+    }
+
+    public double getAngle() {
+        return angleEncoder.getPosition();
     }
 
     public void stopRotating() {
@@ -203,7 +212,11 @@ public class Arm  extends SubsystemBase{
     }
 
     public void retractArm(){
-        armExtendMotor.set(-0.3);
+        armExtendMotor.set(-0.6);
+    }
+
+    public void extendArm(){
+        armExtendMotor.set(0.3);
     }
 
     public void stopRetract() {

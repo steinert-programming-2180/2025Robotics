@@ -16,7 +16,7 @@ public class Manipulator extends SubsystemBase {
 
     // Method to set State
     public void setState() {
-
+        
     }
 
 }

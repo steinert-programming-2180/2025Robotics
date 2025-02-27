@@ -2,18 +2,21 @@ package frc.robot.subsystems.swerve;
 
 import static edu.wpi.first.units.Units.Volts;
 
-import com.google.flatbuffers.Constants;
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
-import edu.wpi.first.hal.SimDevice.Direction;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-
 // import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,7 +35,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.math.GeometryUtils;
+import frc.robot.Constants;
 import frc.robot.SwerveConstants;
+import frc.robot.subsystems.Limelight;
+
 
 public class Swerve extends SubsystemBase {
 
@@ -43,17 +49,40 @@ public class Swerve extends SubsystemBase {
     //public Pigeon2 gyro;
 
     private ChassisSpeeds desiredChassisSpeeds;
-    private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
-    private Swerve m_Swerve; 
+    private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4]; 
+    private Limelight m_Limelight;
     private ChassisSpeeds updatedSpeeds;
     private Twist2d twistForPose;
     private Pose2d futureRobotPose;
+    private RobotConfig m_Config;
     PIDController xController = new PIDController(0, 0, 0);
     PIDController yController = new PIDController(0, 0, 0);
     ProfiledPIDController thetaController = new ProfiledPIDController(0, 0, 0, null);
 
     
-    public Swerve() {
+    public Swerve(Limelight m_Limelight) {
+        this.m_Limelight = m_Limelight;
+        this.m_Config = Constants.PP_CONFIG;
+        
+        AutoBuilder.configure(
+            m_Limelight::getPose, // Robot pose supplier
+            this::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (desiredChassisSpeeds) -> autoDrive(desiredChassisSpeeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                    new PIDConstants(0.01, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(0.1, 0.0, 0.0) // Rotation PID constants
+            ),
+            m_Config, 
+            () -> {
+                var Alliance = DriverStation.getAlliance();
+                if(Alliance.isPresent()){
+                    return Alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+            }, 
+            this
+        );
         
 
         mSwerveMods = new SwerveModule[] {
@@ -96,6 +125,7 @@ public class Swerve extends SubsystemBase {
         )
     );
 
+
     // public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     //     return sysIdRoutine.quasistatic(direction);
     // }
@@ -107,6 +137,27 @@ public class Swerve extends SubsystemBase {
     // public Command sysIdQuasistaticForward(SysIdRoutine.Direction kForward){
     //     return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     // }
+
+
+    public void OTFPath(){
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+        new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)),
+        new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
+        new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90))
+    );
+    
+    PathConstraints constraints = new PathConstraints(null, null, null, null);
+    
+
+    PathPlannerPath path = new PathPlannerPath(
+        waypoints,
+        constraints,
+        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
+        new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+    );
+
+    path.preventFlipping = true;
+    }
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
         return sysIdRoutine.quasistatic(direction);

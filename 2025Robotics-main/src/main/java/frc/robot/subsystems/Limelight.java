@@ -30,7 +30,7 @@ public class Limelight extends SubsystemBase {
 
   public Limelight() {
     // Initialize the Limelight here
-    table = NetworkTableInstance.getDefault().getTable("limelight");
+    table = NetworkTableInstance.getDefault().getTable("limelightNetworkTable");
     
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
@@ -72,7 +72,8 @@ public class Limelight extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return LimelightHelpers.getBotPose2d(getName());}
+    return LimelightHelpers.getBotPose2d("Starscream,");
+  }
 
   public double getCameraMode() {
     return (double) camMode.getNumber(0);
@@ -108,7 +109,7 @@ public class Limelight extends SubsystemBase {
     return tid.getNumber(0);
    }
 
-   public String getAprilTagPose(){
+   public String getAprilTag(){
       switch("ktag" + getApriltag().intValue()){
         case "ktag1": return "Red Loading Station 1";
         case "ktag2": return "Red Loading Station 2";
@@ -142,7 +143,7 @@ public class Limelight extends SubsystemBase {
 
     SmartDashboard.putNumber("tv", tv.getDouble(0));
     SmartDashboard.putNumber("ta", ta.getDouble(0));
-    SmartDashboard.putString("AprilTag Pose", getAprilTagPose());
+    SmartDashboard.putString("Which AprilTag?", getAprilTag());
     SmartDashboard.putNumber("counter", servoCounter);
    }
 
@@ -187,37 +188,4 @@ public class Limelight extends SubsystemBase {
     return prevCounter;
    }
 }
-
-/*public static final class LimelightConstants {
-    public static final double LIME_ANGLE = 0;
-    public static final double LIME_HEIGHT = 0;
-    public static final double LIME_TILTUP = 100;
-    public static final double LIME_TILTDOWN = 55;
-    public static final double LIME_TILTNEUTRAL = 80;
-    public static final int LIME_SERVO = 1;
-  }
-
-  public static final double kInchesToMeters = 0.0254;
-
-  public static enum kAprilTagPose {
-    ktag1, ktag2, ktag3, ktag4, ktag5, ktag6, ktag7, ktag8, ktag9, ktag10, ktag11, ktag12, ktag13, ktag14, ktag15, ktag16, ktag17, ktag18, ktag19, ktag20, ktag21, ktag22;
-  }
-
-  public static class FieldConstants{
-    public static final double TARGET_MAX_HEIGHT = 0;
-  }
-
-  public static double inchesToMeters(double d) {
-    return d * 0.0254;
-    
-  } */
-
-/*PS4Controller testController = new PS4Controller(0);
-    new Trigger(testController::getSquareButton).onTrue(new TopTilt(Robot.limelight));   
-    new Trigger(testController::getTriangleButton).onTrue(new BottomTilt(Robot.limelight));
-    new Trigger(testController::getCircleButton).onTrue(new NeutralTilt(Robot.limelight));
-
-    XboxController LimeController = new XboxController(0);
-    new Trigger(LimeController::getYButtonPressed).onTrue(new IncrementServo(Robot.limelight)); */
-
 

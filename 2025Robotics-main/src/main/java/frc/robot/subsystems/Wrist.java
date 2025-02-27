@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.math.Conversions;
 import frc.robot.Constants;
@@ -32,7 +33,7 @@ public DigitalInput wristBeamBreak;
 
     public Wrist(){
         // wristBeamBreak = new DigitalInput(Constants.wristConstants.beamBreakSensorRioID);
-        wristMotorRotation = new SparkMax (Constants.wristConstants.wristMotorRotation, MotorType.kBrushless);
+        wristMotorRotation = new SparkMax (Constants.ArmConstants.armWristMotorPort, MotorType.kBrushless);
         wristMotorCoral = new SparkMax (Constants.wristConstants.wristMotorCoral, MotorType.kBrushless);
         wristMotorAlgae = new SparkMax (Constants.wristConstants.wristMotorAlgae, MotorType.kBrushless);
 
@@ -93,6 +94,11 @@ public void configureMotors(){
         wristMotorCoral.configure(wristMotorCoralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
+@Override
+public void periodic() {
+    
+}
+
 public boolean getBeamBreak(){
     return wristBeamBreak.get();
 }
@@ -103,8 +109,8 @@ public void rotateTheWrist(double wristAngle){
     howMuchToPos = Math.abs(wristMotorRotation.getAbsoluteEncoder().getPosition()-wristAngle);
     
     if(howMuchToPos>=0.1){
-    wristMotorRotation.getClosedLoopController().setReference(wristAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-
+        wristMotorRotation.getClosedLoopController().setReference(wristAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        SmartDashboard.putNumber("Wrist PID Output", wristMotorRotation.getAppliedOutput());
     }
 }
 
