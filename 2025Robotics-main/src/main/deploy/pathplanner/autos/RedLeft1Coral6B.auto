@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RedMiddleCoralScorePath"
+            "pathName": "RedLeft"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Unc Autos",
+  "folder": "1Coral",
   "choreoAuto": false
 }

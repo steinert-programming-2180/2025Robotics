@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,6 +53,7 @@ public class Arm  extends SubsystemBase{
 
     private JoystickButton leftBumper;
     private JoystickButton rightBumper;
+    private Encoder telescopeEncoder; 
 
     private double baseArmSpeed;
 
@@ -75,6 +77,8 @@ public class Arm  extends SubsystemBase{
         armFollowConfig = new SparkMaxConfig();
 
         armExtendConfig = new SparkMaxConfig();
+
+        telescopeEncoder = new Encoder(4, 5);
 
         // baseAngleController = new PIDController(ArmConstants.armBaseP, ArmConstants.armBaseI, ArmConstants.armBaseD);
 
@@ -212,11 +216,11 @@ public class Arm  extends SubsystemBase{
     }
 
     public void retractArm(){
-        armExtendMotor.set(-0.6);
+        armExtendMotor.set(-0.75);
     }
 
     public void extendArm(){
-        armExtendMotor.set(0.3);
+        armExtendMotor.set(0.75);
     }
 
     public void stopRetract() {
@@ -225,5 +229,9 @@ public class Arm  extends SubsystemBase{
 
     public boolean atBottomLimit(){
         return bottomLimitSwitch.get();
+    }
+
+    public void raiseArm(){
+        armBaseMotor.set(0.5);
     }
 }

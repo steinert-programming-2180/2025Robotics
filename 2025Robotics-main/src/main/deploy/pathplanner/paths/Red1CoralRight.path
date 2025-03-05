@@ -3,43 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.638,
-        "y": 4.104054054054053
+        "x": 10.093647540983607,
+        "y": 6.5484118852459
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.505415860003433,
-        "y": 4.191369977538085
+        "x": 11.807889344262295,
+        "y": 6.5484118852459
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.899,
-        "y": 4.104
+        "x": 12.17950819672131,
+        "y": 6.5484118852459
       },
       "prevControl": {
-        "x": 7.124874551725318,
-        "y": 4.17936999163687
+        "x": 11.040676229508197,
+        "y": 6.536424180327868
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -47,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -1.1233027140753458
   },
   "reversed": false,
-  "folder": "Unc Paths",
+  "folder": "RedScoringAutos",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

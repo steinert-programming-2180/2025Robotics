@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 
+// import edu.wpi.first.cameraserver.CameraServer;
+
 // import org.littletonrobotics.urcl.URCL;
 
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -79,7 +81,6 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    // free P Diddy
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }

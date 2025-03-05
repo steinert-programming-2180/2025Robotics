@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BlueMiddleCoralScorePath"
+            "pathName": "BlueRightReef4A"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Unc Autos",
+  "folder": "1Coral",
   "choreoAuto": false
 }

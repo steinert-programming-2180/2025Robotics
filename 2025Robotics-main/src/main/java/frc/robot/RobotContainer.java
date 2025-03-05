@@ -22,6 +22,8 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ps5Rumble;
 // import frc.robot.commands.TopTilt;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Endgame;
+// import frc.robot.subsystems.Endgame;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Wrist;
@@ -38,10 +40,14 @@ public class RobotContainer {
     
     private final Wrist m_Wrist = new Wrist();
     private final Limelight m_Limelight = new Limelight();
+    private final Swerve s_Swerve = new Swerve(m_Limelight);
+    private final Endgame climber=new Endgame();
+    private final Auto m_Auto = new Auto(s_Swerve, m_Limelight);
     // private final IntakeReverse m_IntakeReverse = new IntakeReverse(m_Arm);
     // private final IntakeForward m_IntakeForward = new IntakeForward(m_Arm);
     
     private final ps5Rumble m_Ps5Rumble = new ps5Rumble();
+
     // private final AutonomousCommand m_autonomousCommand = new AutonomousCommand(m_Swerve, m_Arm, m_IntakeForward, m_IntakeReverse);
     
     /* Controllers */
@@ -70,11 +76,21 @@ public class RobotContainer {
     private final JoystickButton leftTrigger = new JoystickButton(driver, PS5Controller.Button.kL2.value);
     private final JoystickButton rightTrigger = new JoystickButton(driver, PS5Controller.Button.kR2.value);
 
+    private final JoystickButton xBoxrightBumper = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton xBoxLeftBumper = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     private final JoystickButton square = new JoystickButton(driver, PS5Controller.Button.kSquare.value);
     private final JoystickButton triangle = new JoystickButton(driver, PS5Controller.Button.kTriangle.value);
     private final JoystickButton circle = new JoystickButton(driver, PS5Controller.Button.kCircle.value);
     private final JoystickButton cross = new JoystickButton(driver, PS5Controller.Button.kCross.value);
+
+    private final JoystickButton xBoxAButton=new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton xBoxBButton=new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton xBoxXButton=new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton xBoxYButton=new JoystickButton(driver, XboxController.Button.kY.value);
+
+    private final JoystickButton xBoxLeftStick=new JoystickButton(driver, XboxController.Button.kLeftStick.value);
+    private final JoystickButton xBoxRightStick=new JoystickButton(driver, XboxController.Button.kRightStick.value);
 
     private final Arm m_Arm = new Arm(leftBumper, rightBumper); 
 
@@ -87,9 +103,7 @@ public class RobotContainer {
     CommandXboxController m_LimelightController = new CommandXboxController(1);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve(m_Limelight);
     private final PoseEstimator s_PoseEstimator = new PoseEstimator();
-    private SendableChooser<Command> autoChooser;
 
     // private final Auto m_auto = new Auto(s_Swerve, m_Limelight);
 
@@ -100,11 +114,11 @@ public class RobotContainer {
     
         DataLogManager.getLog();
 
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        // autoChooser = AutoBuilder.buildAutoChooser();
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
 
 
-        rumblePS5Trigger = new Trigger(DriverStation::isTeleopEnabled).onTrue(Commands.waitSeconds(Constants.ps5RumbleWarningTime).andThen(m_Ps5Rumble));
+        // rumblePS5Trigger = new Trigger(DriverStation::isTeleopEnabled).onTrue(Commands.waitSeconds(Constants.ps5RumbleWarningTime).andThen(m_Ps5Rumble));
 
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
@@ -137,7 +151,7 @@ public class RobotContainer {
         // new Trigger(testController::getTriangleButton).onTrue(new BottomTilt(m_Limelight));
         // new Trigger(testController::getCircleButton).onTrue(new NeutralTilt(m_Limelight));
 
-        XboxController LimeController = new XboxController(0);
+        CommandXboxController xBoxController = new CommandXboxController(1);
         // new Trigger(LimeController::getYButtonPressed).onTrue(new IncrementServo(m_Limelight));
 
 
@@ -175,15 +189,8 @@ public class RobotContainer {
         // circle.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         // triangle.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         // cross.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-
-
-
         
-        cross.onTrue(new InstantCommand(() -> m_Arm.retractArm()));
-        cross.onFalse(new InstantCommand(() -> m_Arm.stopRetract()));
-
-
-
+        // cross.onFalse(new InstantCommand(() -> m_Arm.stopRetract()));
 
         // if (leftBumper.getAsBoolean()) {
         //     m_Arm.rotate(0.2);
@@ -196,16 +203,59 @@ public class RobotContainer {
         // rightBumper.whileTrue(new InstantCommand(() -> m_Arm.rotate(-0.2)));
 
         // circle.onTrue(new InstantCommand(() -> m_Arm.setAngle(75)));
+        // square.whileTrue(new InstantCommand(() -> m_Arm.raiseArm()));
         // triangle.onTrue(new InstantCommand(() -> m_Arm.setAngle(90)));
-        square.onTrue(new InstantCommand(() -> m_Arm.setAngle(75)));
-        circle.onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(20)));
-        triangle.onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(45)));
 
+        // circle extend
+        // Cross retract
+        
+        
+        // circle.onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(20)));
+        // triangle.onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(45)));
+
+        //reef lvl 3
+        xBoxBButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(75)));
+        //reef lvl 1
+        xBoxXButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(30)));
+        //reef lvl 2
+        xBoxAButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(50)));
+        //reef lvl 4
+        xBoxYButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(90)));
+        //human player station
+        xBoxController.start().onTrue(new InstantCommand(() -> m_Arm.setAngle(65)));
+        
+        //extend
+        xBoxLeftBumper.toggleOnTrue(new InstantCommand(() -> m_Arm.retractArm())).toggleOnFalse(new InstantCommand(() -> m_Arm.stopRetract()));
+        //retract
+        xBoxrightBumper.toggleOnTrue(new InstantCommand(() -> m_Arm.extendArm())).toggleOnFalse(new InstantCommand(() -> m_Arm.stopRetract()));
+
+        // //high reef pegs
+        // xBoxController.povUp().onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(100)));
+        // // human player station
+        // xBoxController.povLeft().onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(55)));
+        // //main reef pegs
+        // xBoxController.povRight().onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(35)));
+        
+        //intake in
+        xBoxController.leftTrigger().whileTrue(new InstantCommand(() -> m_Wrist.activateIntake()));
+        //intake out
+        xBoxController.rightTrigger().whileTrue(new InstantCommand(() -> m_Wrist.reverseIntake()));
+
+        // climber deploy
+        xBoxController.povUp().whileTrue(new InstantCommand(() -> climber.reverseClimber()));
+        //climber rotation
+        xBoxController.povRight().whileTrue(new InstantCommand(() -> climber.endgamePhaseTwo()));
+        xBoxController.povRight().whileFalse(new InstantCommand(() -> climber.stopRotation()));
+        //un-deploy climber
+        xBoxController.povDown().whileTrue(new InstantCommand(() -> climber.endgamePhaseOne()));
+        //rotate opposite direction
+        xBoxController.povLeft().whileTrue(new InstantCommand(() -> climber.reverseRotation()));
+        xBoxController.povLeft().whileFalse(new InstantCommand(() -> climber.stopRotation()));
     }
 
-    public void ps5ControllerRumble(){
-        m_ps5driverController.setRumble(GenericHID.RumbleType.kBothRumble, Constants.OperatorConstants.PS5ControllerRumble);
-    }
+    // public void ps5ControllerRumble(){
+    //     m_ps5driverController.setRumble(GenericHID.RumbleType.kBothRumble, Constants.OperatorConstants.PS5ControllerRumble);
+    // }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -213,7 +263,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
-        
+        return m_Auto.getAutoCommand(); 
     }
 }

@@ -17,7 +17,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmToL4"
+                  "name": null
                 }
               }
             ]
@@ -36,7 +36,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmToIntakePosition"
+                  "name": null
                 }
               }
             ]
@@ -55,7 +55,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmToL4"
+                  "name": null
                 }
               }
             ]
@@ -74,7 +74,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmToIntakePosition"
+                  "name": null
                 }
               }
             ]
@@ -93,7 +93,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmToL4"
+                  "name": null
                 }
               }
             ]
@@ -112,7 +112,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmToIntakePosition"
+                  "name": null
                 }
               }
             ]
@@ -131,7 +131,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ArmToL4"
+                  "name": null
                 }
               }
             ]
@@ -141,6 +141,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "4Coral",
   "choreoAuto": false
 }

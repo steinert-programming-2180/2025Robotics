@@ -16,14 +16,14 @@ public class SwerveConfig
     public static final double angleConversionFactor = 360;
 
 
-    public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
+    public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
     public static final COTSNeoSwerveConstants chosenModule =  
         COTSNeoSwerveConstants.SDSMK4i(COTSNeoSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(27); 
-    public static final double wheelBase = Units.inchesToMeters(27); 
+    public static final double trackWidth = Units.inchesToMeters(22.5); 
+    public static final double wheelBase = Units.inchesToMeters(22.5); 
     public static final double wheelCircumference = chosenModule.wheelCircumference;
 
 
@@ -78,15 +78,15 @@ public class SwerveConfig
     public static final double angleKA = 0.0008773;
 
     /* Angle Motor PID Values */
-    public static final double angleKP = 0.06;
+    public static final double angleKP = 0.05;
     public static final double angleKI = 0;
-    public static final double angleKD = 0.0008;
+    public static final double angleKD = 0.001;
     public static final double angleKF = 0;
 
     /* Drive Motor PID Values */
-    public static final double driveKP = 1.5; 
+    public static final double driveKP = 1.8; 
     public static final double driveKI = 0.0;
-    public static final double driveKD = 0.0;
+    public static final double driveKD = 0.0021;
     public static final double driveKF = 0.0;
 
     /* Drive Motor Characterization Values 

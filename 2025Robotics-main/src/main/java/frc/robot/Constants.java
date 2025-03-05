@@ -23,8 +23,8 @@ public final class Constants {
     public static final double ps5RumbleWarningTime = 10; // IN SECONDS
 
     
-    public static final double ROBOT_MASS_KG = 23.35;
-    public static final double ROBOT_RADIUS_M = 0.4939;
+    public static final double ROBOT_MASS_KG = 50.000;
+    public static final double ROBOT_RADIUS_M = 0.349;
     public static final double ROBOT_MOI = 0.5 * ROBOT_MASS_KG * Math.pow(ROBOT_RADIUS_M, 2);
     public static final ModuleConfig MODULE_CONFIG = 
         new ModuleConfig(0.051, 2, 1.2, DCMotor.getNeoVortex(1).withReduction(6.75), 60, ROBOT_MASS_KG, 1);
@@ -74,9 +74,8 @@ public final class Constants {
     }
 
     public static class endgameConstants{
-        public static final int endgameSpinMotor1 = 100; 
-        public static final int endgameFollowMotor = 101; 
-        public static final int engameRotationMotor = 102; 
+        public static final int endgameSpinMotor1 = 16;  
+        public static final int engameRotationMotor = 15; 
 
 
         public static final int endgameLimitSwitchID = 2; 
@@ -94,9 +93,9 @@ public final class Constants {
         public static final double wristMotorCoralSpeed = 0.5; // speed for having the wrist motor for intake
         public static final double wristMotorAlgaeSpeed = 0.5; // speed for having the algae motor for intake
 
-        public static final int wristMotorRotation = 20;
-        public static final int wristMotorCoral = 21;
-        public static final int wristMotorAlgae = 22; 
+        // public static final int wristMotorRotation = 20;
+        // public static final int wristMotorCoral = 21;
+        // public static final int wristMotorAlgae = 22; 
         
         
     }
@@ -107,10 +106,10 @@ public final class Constants {
         public static final int armFollowMotorPort = 10;
         public static final int armBaseMotorPort = 11;
         public static final int armExtendMotorPort = 12;
-        public static final int armWristMotorPort = 16;
+        // public static final int armWristMotorPort = 16;
     
         public static final int intakeMotorPort = 14;
-        public static final int algaeMotorPort = 15;
+        // public static final int algaeMotorPort = 15;
     
         public static final double intakeSpeed = 0.8;
         public static final double algaeSpeed = 0.75;

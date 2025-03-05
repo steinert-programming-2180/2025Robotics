@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -19,31 +20,25 @@ public class Endgame extends SubsystemBase{
 DigitalInput EndgameimitSwitch = new DigitalInput(Constants.endgameConstants.endgameLimitSwitchID);
 
 private SparkMax endgameSpinMotor;
-private SparkMax endgameFollowMotor;
 private SparkMax endgameRotationMotor; 
 
 private SparkMaxConfig endgameSpinMotorConfig;
-private SparkMaxConfig endgameFollowMotorConfig;
 private SparkMaxConfig endGameRotationConfig;
 
     public Endgame(){
 
 
     endgameSpinMotor = new SparkMax(Constants.endgameConstants.endgameSpinMotor1, MotorType.kBrushless);
-    endgameFollowMotor = new SparkMax(Constants.endgameConstants.endgameFollowMotor, MotorType.kBrushless);
     endgameRotationMotor = new SparkMax(Constants.endgameConstants.engameRotationMotor, MotorType.kBrushless);
 
 
     endgameSpinMotorConfig = new SparkMaxConfig();
-    endgameFollowMotorConfig = new SparkMaxConfig();
     endGameRotationConfig= new SparkMaxConfig();
 
     configMotors();
     }
 
     public void configMotors(){
-
-        endgameFollowMotorConfig.follow(endgameSpinMotor, false);
 
             // Endgame rotation motor configuration
 
@@ -69,28 +64,33 @@ private SparkMaxConfig endGameRotationConfig;
 
         endgameSpinMotor.configure(endgameSpinMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-            // Endgame follow motor configuration
+    }
 
-        endgameFollowMotorConfig
-        .inverted(false)
-        .idleMode(IdleMode.kBrake);
-
-        endgameFollowMotorConfig.absoluteEncoder
-        .positionConversionFactor(360);
-        // .velocityConversionFactor(360);
-
-        endgameFollowMotor.configure(endgameFollowMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Endgame deploy motor", endgameSpinMotor.getAbsoluteEncoder().getPosition());
+        SmartDashboard.putNumber("Endgame rotation motor", endgameRotationMotor.getAbsoluteEncoder().getPosition());
     }
 
 
-    public void EndgamePhaseTwo(){
-        endgameRotationMotor.set(0.2);
+    public void endgamePhaseTwo(){
+        endgameRotationMotor.set(0.75);
     }
 
     public void endgamePhaseOne(){
-        if(!EndgameimitSwitch.get()){
-        endgameSpinMotor.set(0.2);
-        }
+        endgameSpinMotor.set(0.125);
+    }
+
+    public void reverseClimber(){
+        endgameSpinMotor.set(-0.125);
+    }
+
+    public void reverseRotation(){
+        endgameRotationMotor.set(-0.75);
+    }
+
+    public void stopRotation(){
+        endgameRotationMotor.set(0.0);
     }
     
 }

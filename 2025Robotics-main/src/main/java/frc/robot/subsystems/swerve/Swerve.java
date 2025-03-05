@@ -64,25 +64,25 @@ public class Swerve extends SubsystemBase {
         this.m_Limelight = m_Limelight;
         this.m_Config = Constants.PP_CONFIG;
         
-        AutoBuilder.configure(
-            m_Limelight::getPose, // Robot pose supplier
-            this::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (desiredChassisSpeeds) -> autoDrive(desiredChassisSpeeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(0.01, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(0.1, 0.0, 0.0) // Rotation PID constants
-            ),
-            m_Config, 
-            () -> {
-                var Alliance = DriverStation.getAlliance();
-                if(Alliance.isPresent()){
-                    return Alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
-            }, 
-            this
-        );
+        // AutoBuilder.configure(
+        //     m_Limelight::getPose, // Robot pose supplier
+        //     this::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
+        //     this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        //     (desiredChassisSpeeds) -> autoDrive(desiredChassisSpeeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+        //     new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+        //             new PIDConstants(0.01, 0.0, 0.0), // Translation PID constants
+        //             new PIDConstants(0.1, 0.0, 0.0) // Rotation PID constants
+        //     ),
+        //     m_Config, 
+        //     () -> {
+        //         var Alliance = DriverStation.getAlliance();
+        //         if(Alliance.isPresent()){
+        //             return Alliance.get() == DriverStation.Alliance.Red;
+        //         }
+        //         return false;
+        //     }, 
+        //     this
+        // );
         
 
         mSwerveMods = new SwerveModule[] {
@@ -185,6 +185,9 @@ public class Swerve extends SubsystemBase {
 
 
     public void autoDrive(ChassisSpeeds desiredChassisSpeeds) {
+        
+        SmartDashboard.putNumber("desired vx (m/s)", desiredChassisSpeeds.vxMetersPerSecond);
+
         // general swerve speeds --> speed per module
         swerveModuleStates = SwerveConfig.swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds); 
         // toSwerveModuleStates(fieldRelativeSpeeds)

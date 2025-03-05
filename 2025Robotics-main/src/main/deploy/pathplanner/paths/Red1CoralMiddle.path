@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.93780737704918,
-        "y": 4.0549692622950815
+        "x": 9.99375,
+        "y": 4.0445
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.265400290161304,
-        "y": 3.9280696380823157
+        "x": 10.633094262295083,
+        "y": 4.030993852459016
       },
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 11.604098360655737,
-        "y": 3.887141393442622
+        "x": 11.580122950819671,
+        "y": 4.0445
       },
       "prevControl": {
-        "x": 10.313998929474895,
-        "y": 3.9983597345720314
+        "x": 10.681045081967211,
+        "y": 4.030993852459016
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Unc Paths",
+  "folder": "RedScoringAutos",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
