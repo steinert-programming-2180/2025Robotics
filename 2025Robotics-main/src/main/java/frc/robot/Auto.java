@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +22,11 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveModule;
 // import edu.wpi.first.cameraserver.CameraServer;
 
+import static edu.wpi.first.units.Units.Feet;
+
 import java.util.List;
+import java.util.Optional;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 
@@ -37,6 +42,7 @@ public class Auto extends SubsystemBase{
     private Twist2d twistForPose;
     private Pose2d futureRobotPose;
     private RobotConfig m_config;
+    private PoseEstimator m_Estimator;
     
 
     // PIDController xController = new PIDController(0, 0, 0);
@@ -60,10 +66,8 @@ public class Auto extends SubsystemBase{
     private SendableChooser<Command> autoChooser;
     List<PathPlannerPath> pathGroup;
 
-    public Auto(Swerve swerve, Limelight m_Limelight){
-
-
-        this.m_Limelight = m_Limelight;
+    public Auto(Swerve swerve, PoseEstimator m_Estimator){
+        this.m_Estimator = m_Estimator;
         this.m_Swerve = swerve;
         this.m_config = Constants.PP_CONFIG;
 
@@ -114,19 +118,19 @@ public class Auto extends SubsystemBase{
 
     
         AutoBuilder.configure(
-            m_Swerve::getPose, // Robot pose supplier
-            m_Swerve::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
+            m_Estimator::getPose, // Robot pose supplier
+            m_Estimator::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
             m_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (desiredChassisSpeeds) -> m_Swerve.autoDrive(desiredChassisSpeeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            m_Swerve::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(3, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(1, 0.0, 0.0) // Rotation PID constants
+                    new PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(0.5, 0.0, 0.0) // Rotation PID constants (old 0.03)
             ),
             m_config, 
             () -> {
-                var Alliance = DriverStation.getAlliance();
-                if(Alliance.isPresent()){
-                    return Alliance.get() == DriverStation.Alliance.Red;
+                Optional<Alliance> alliance = DriverStation.getAlliance();
+                if(alliance.isPresent()){
+                    return alliance.get() == DriverStation.Alliance.Red;
                 }
                 return false;
             }, 

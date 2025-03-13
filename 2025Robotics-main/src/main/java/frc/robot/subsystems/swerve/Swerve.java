@@ -12,9 +12,9 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 // import com.ctre.phoenix.sensors.Pigeon2;
@@ -38,12 +38,13 @@ import frc.lib.math.GeometryUtils;
 import frc.robot.Constants;
 import frc.robot.SwerveConstants;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PoseEstimator;
 
 
 public class Swerve extends SubsystemBase {
 
     public SwerveDriveOdometry swerveOdometry;
-    public SwerveModule[] mSwerveMods;
+    public SwerveMod[] mSwerveMods;
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
     //public Pigeon2 gyro;
@@ -63,6 +64,7 @@ public class Swerve extends SubsystemBase {
     public Swerve(Limelight m_Limelight) {
         this.m_Limelight = m_Limelight;
         this.m_Config = Constants.PP_CONFIG;
+
         
         // AutoBuilder.configure(
         //     m_Limelight::getPose, // Robot pose supplier
@@ -85,7 +87,7 @@ public class Swerve extends SubsystemBase {
         // );
         
 
-        mSwerveMods = new SwerveModule[] {
+        mSwerveMods = new SwerveMod[] {
         
             new SwerveMod(0, SwerveConstants.Swerve.Mod0.constants),
             new SwerveMod(1, SwerveConstants.Swerve.Mod1.constants),
@@ -138,27 +140,6 @@ public class Swerve extends SubsystemBase {
     //     return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     // }
 
-
-    public void OTFPath(){
-        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)),
-        new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
-        new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90))
-    );
-    
-    PathConstraints constraints = new PathConstraints(null, null, null, null);
-    
-
-    PathPlannerPath path = new PathPlannerPath(
-        waypoints,
-        constraints,
-        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-        new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-    );
-
-    path.preventFlipping = true;
-    }
-
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
         return sysIdRoutine.quasistatic(direction);
     }
@@ -189,7 +170,9 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("desired vx (m/s)", desiredChassisSpeeds.vxMetersPerSecond);
 
         // general swerve speeds --> speed per module
-        swerveModuleStates = SwerveConfig.swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds); 
+        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(desiredChassisSpeeds, 0.02);
+        swerveModuleStates = SwerveConfig.swerveKinematics.toSwerveModuleStates(discreteSpeeds); 
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConfig.maxSpeed);
         // toSwerveModuleStates(fieldRelativeSpeeds)
         setModuleStates(swerveModuleStates);
       }
@@ -221,7 +204,7 @@ public class Swerve extends SubsystemBase {
        // System.out.println("setting module states: "+desiredStates[0]);
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxSpeed);
         
-        for(SwerveModule mod : mSwerveMods){
+        for(SwerveMod mod : mSwerveMods){
             mod.setDesiredState(desiredStates[mod.getModuleNumber()], true);
         }
     }  
@@ -229,20 +212,20 @@ public class Swerve extends SubsystemBase {
     //     return SwerveConfig.swerveKinematics.toChassisSpeeds(swerveModuleStates);
     // }
     
-    public Pose2d getPose() {
-        Pose2d p =  swerveOdometry.getPoseMeters();
-        return new Pose2d(-p.getX(),-p.getY(),  p.getRotation());
-    }
+    // public Pose2d getPose() {
+    //     Pose2d p =  swerveOdometry.getPoseMeters();
+    //     return new Pose2d(-p.getX(),-p.getY(),  p.getRotation());
+    // }
     
-    public void resetOdometry(Pose2d pose) {
+    // public void resetOdometry(Pose2d pose) {
         
-        swerveOdometry.resetPosition(new Rotation2d(), getModulePositions(), pose);
-        zeroGyro(pose.getRotation().getDegrees());
+    //     swerveOdometry.resetPosition(new Rotation2d(), getModulePositions(), pose);
+    //     zeroGyro(pose.getRotation().getDegrees());
        
-    }
+    // }
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        for(SwerveModule mod : mSwerveMods) {
+        for(SwerveMod mod : mSwerveMods) {
             states[mod.getModuleNumber()] = mod.getState();
         }
         return states;
@@ -250,18 +233,14 @@ public class Swerve extends SubsystemBase {
 
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        for(SwerveModule mod : mSwerveMods) {
+        for(SwerveMod mod : mSwerveMods) {
             positions[mod.getModuleNumber()] = mod.getPosition();
         }
         return positions;
     }
+    
     public ChassisSpeeds getRobotRelativeSpeeds(){
-        return SwerveConfig.swerveKinematics.toChassisSpeeds(new SwerveModuleState[]{
-            mSwerveMods[0].getState(),
-            mSwerveMods[1].getState(),
-            mSwerveMods[2].getState(),
-            mSwerveMods[3].getState()
-        });
+        return SwerveConfig.swerveKinematics.toChassisSpeeds(getModuleStates());
     }
 
     public void zeroGyro(double deg) {

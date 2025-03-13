@@ -1,6 +1,7 @@
 package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -41,8 +42,9 @@ public class RobotContainer {
     private final Wrist m_Wrist = new Wrist();
     private final Limelight m_Limelight = new Limelight();
     private final Swerve s_Swerve = new Swerve(m_Limelight);
+    private final PoseEstimator m_PoseEstimator = new PoseEstimator(s_Swerve);
     private final Endgame climber=new Endgame();
-    private final Auto m_Auto = new Auto(s_Swerve, m_Limelight);
+    private final Auto m_Auto = new Auto(s_Swerve, m_PoseEstimator);
     // private final IntakeReverse m_IntakeReverse = new IntakeReverse(m_Arm);
     // private final IntakeForward m_IntakeForward = new IntakeForward(m_Arm);
     
@@ -103,7 +105,6 @@ public class RobotContainer {
     CommandXboxController m_LimelightController = new CommandXboxController(1);
 
     /* Subsystems */
-    private final PoseEstimator s_PoseEstimator = new PoseEstimator();
 
     // private final Auto m_auto = new Auto(s_Swerve, m_Limelight);
 
@@ -146,10 +147,6 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-
-        // new Trigger(testController::getSquareButton).onTrue(new TopTilt(m_Limelight));   
-        // new Trigger(testController::getTriangleButton).onTrue(new BottomTilt(m_Limelight));
-        // new Trigger(testController::getCircleButton).onTrue(new NeutralTilt(m_Limelight));
 
         CommandXboxController xBoxController = new CommandXboxController(1);
         // new Trigger(LimeController::getYButtonPressed).onTrue(new IncrementServo(m_Limelight));
@@ -264,5 +261,9 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return m_Auto.getAutoCommand(); 
+    }
+
+    public Pose2d getCurrentPose() {
+        return m_PoseEstimator.getPose();
     }
 }

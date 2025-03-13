@@ -17,23 +17,40 @@ public class PoseEstimator extends SubsystemBase {
   /** Creates a new PoseEstimator. */
   public SwerveDrivePoseEstimator sEstimator;
   public Pose2d visionPose = new Pose2d();
+  private frc.robot.subsystems.swerve.Swerve m_Swerve;
+  private Rotation2d rawGyroRotation = new Rotation2d();
+
+
   
-  public PoseEstimator() {
+  public PoseEstimator(frc.robot.subsystems.swerve.Swerve m_Swerve) {
+    this.m_Swerve = m_Swerve;
     sEstimator = new SwerveDrivePoseEstimator(
       SwerveConfig.swerveKinematics,
-      new Rotation2d(),
-      new SwerveModulePosition[] {
-        new SwerveModulePosition(),
-        new SwerveModulePosition(),
-        new SwerveModulePosition(),
-        new SwerveModulePosition()
-      },
+      rawGyroRotation,
+      lastModulePositions,
       new Pose2d(),
       Constants.PoseEstimator.stateStdDevs,
       Constants.PoseEstimator.VisionStdDevs
     );
 
   }
+
+  private SwerveModulePosition[] lastModulePositions = new SwerveModulePosition[]{
+    new SwerveModulePosition(), 
+    new SwerveModulePosition(),
+    new SwerveModulePosition(),
+    new SwerveModulePosition()
+  };
+
+  public Pose2d getPose(){
+    return sEstimator.getEstimatedPosition();
+  }
+ 
+  public void resetOdometry(Pose2d pose){
+    sEstimator.resetPosition(rawGyroRotation, m_Swerve.getModulePositions(), pose);
+  } 
+
+
 
   @Override
   public void periodic() {

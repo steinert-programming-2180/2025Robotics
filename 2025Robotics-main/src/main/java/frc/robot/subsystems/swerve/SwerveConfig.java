@@ -78,13 +78,13 @@ public class SwerveConfig
     public static final double angleKA = 0.0008773;
 
     /* Angle Motor PID Values */
-    public static final double angleKP = 0.05;
+    public static final double angleKP = 0.005;
     public static final double angleKI = 0;
     public static final double angleKD = 0.001;
     public static final double angleKF = 0;
 
     /* Drive Motor PID Values */
-    public static final double driveKP = 1.8; 
+    public static final double driveKP = 1; 
     public static final double driveKI = 0.0;
     public static final double driveKD = 0.0021;
     public static final double driveKF = 0.0;
@@ -97,7 +97,7 @@ public class SwerveConfig
 
     /* Swerve Profiling Values */
     /** Meters per Second */
-    public static final double maxSpeed = 5.0;
+    public static final double maxSpeed = 6.0;
     /** Radians per Second */
     public static final double maxAngularVelocity = 5.0; //max 10 or.....
    

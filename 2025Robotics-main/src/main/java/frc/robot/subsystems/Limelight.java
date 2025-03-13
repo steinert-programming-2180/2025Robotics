@@ -8,10 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.Constants.LimelightConstants;
-import frc.robot.Robot;
 import frc.robot.Constants.FieldConstants;
-import edu.wpi.first.wpilibj.Servo;
+import frc.robot.Constants.LimelightConstants;
 
 
 public class Limelight extends SubsystemBase {
@@ -23,30 +21,34 @@ public class Limelight extends SubsystemBase {
   private NetworkTableEntry tx;
   private NetworkTableEntry ta;
   private NetworkTableEntry tid;
-  public Servo limeServo;
-  private int servoCounter;
-  private int prevCounter;
-  NetworkTable table;
+  NetworkTable tableFront;
+  NetworkTable tableBack;
 
   public Limelight() {
     // Initialize the Limelight here
-    table = NetworkTableInstance.getDefault().getTable("limelightNetworkTable");
+    tableFront = NetworkTableInstance.getDefault().getTable("limelight-front");
+    tableBack = NetworkTableInstance.getDefault().getTable("limelight-back");
     
-    tx = table.getEntry("tx");
-    ty = table.getEntry("ty");
+    tx = tableFront.getEntry("tx");
+    tx = tableBack.getEntry("tx");
+    ty = tableFront.getEntry("ty");
+    ty = tableBack.getEntry("ty");
 
     // Checks for target
-    tv = table.getEntry("tv");
+
+    tv = tableFront.getEntry("tv");
+    tv = tableBack.getEntry("tv");
     // Target area as a percentage of image
-    ta = table.getEntry("ta");
+    ta = tableFront.getEntry("ta");
+    ta = tableBack.getEntry("ta");
 
-    tid = table.getEntry("tid");
+    tid = tableFront.getEntry("tid");
+    tid = tableBack.getEntry("tid");
 
-    camMode = table.getEntry("camMode");
-    ledMode = table.getEntry("ledMode");
-
-    prevCounter=0;
-    servoCounter=0;
+    camMode = tableFront.getEntry("camMode");
+    camMode = tableBack.getEntry("camMode");
+    ledMode = tableFront.getEntry("ledMode");
+    ledMode = tableBack.getEntry("ledMode");
 
   }
 
@@ -72,7 +74,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return LimelightHelpers.getBotPose2d("Starscream,");
+    return LimelightHelpers.getBotPose2d(getName());
   }
 
   public double getCameraMode() {
@@ -109,7 +111,7 @@ public class Limelight extends SubsystemBase {
     return tid.getNumber(0);
    }
 
-   public String getAprilTag(){
+   public String getAprilTagPose(){
       switch("ktag" + getApriltag().intValue()){
         case "ktag1": return "Red Loading Station 1";
         case "ktag2": return "Red Loading Station 2";
@@ -143,49 +145,6 @@ public class Limelight extends SubsystemBase {
 
     SmartDashboard.putNumber("tv", tv.getDouble(0));
     SmartDashboard.putNumber("ta", ta.getDouble(0));
-    SmartDashboard.putString("Which AprilTag?", getAprilTag());
-    SmartDashboard.putNumber("counter", servoCounter);
-   }
-
-   public void topTilt() {
-    limeServo.setAngle(LimelightConstants.LIME_TILTUP);
-   }
-
-   public void bottomTilt() {
-    limeServo.setAngle(LimelightConstants.LIME_TILTDOWN);
-   }
-
-   public void neutralTilt() {
-    limeServo.setAngle(LimelightConstants.LIME_TILTNEUTRAL);
-   }
-   public double getTiltAngle() {
-    return limeServo.getAngle();
-   }
-
-   public void incrementServo(){
-    prevCounter=servoCounter;
-    servoCounter++;
-
-
-    if(servoCounter%4==0){
-        bottomTilt();
-      }
-      else if(servoCounter%4==1){
-        neutralTilt();
-      }
-      else if(servoCounter%4==2){
-        topTilt();
-      }
-      else if(servoCounter%4==3){
-        neutralTilt();
-      }
-   }
-
-   public int getServoCounter(){
-    return servoCounter;
-   }
-   public int getPrevCounter(){
-    return prevCounter;
+    SmartDashboard.putString("AprilTag Pose", getAprilTagPose());
    }
 }
-

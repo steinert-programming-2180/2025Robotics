@@ -23,7 +23,7 @@ public final class Constants {
     public static final double ps5RumbleWarningTime = 10; // IN SECONDS
 
     
-    public static final double ROBOT_MASS_KG = 50.000;
+    public static final double ROBOT_MASS_KG = 22.73;
     public static final double ROBOT_RADIUS_M = 0.349;
     public static final double ROBOT_MOI = 0.5 * ROBOT_MASS_KG * Math.pow(ROBOT_RADIUS_M, 2);
     public static final ModuleConfig MODULE_CONFIG = 

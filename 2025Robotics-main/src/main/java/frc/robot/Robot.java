@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.urcl.URCL;
+
 import edu.wpi.first.cameraserver.CameraServer;
 
 // import edu.wpi.first.cameraserver.CameraServer;
@@ -47,7 +50,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     DataLogManager.start();
-    // URCL.start();
+    URCL.start();
   }
 
   /**
@@ -88,7 +91,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    Logger.recordOutput("Current Pose", m_robotContainer.getCurrentPose());
+  }
 
   @Override
   public void teleopInit() {
