@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
@@ -121,10 +122,10 @@ public class Auto extends SubsystemBase{
             m_Estimator::getPose, // Robot pose supplier
             m_Estimator::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
             m_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            m_Swerve::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            m_Swerve::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(0.5, 0.0, 0.0) // Rotation PID constants (old 0.03)
+                    new PIDConstants(5, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5, 0.0, 0.0) // Rotation PID constants (old 0.03)
             ),
             m_config, 
             () -> {
@@ -174,7 +175,13 @@ public class Auto extends SubsystemBase{
 
 
     public Command getAutoCommand(){
-        return autoChooser.getSelected();
+        
+        if(AutoBuilder.isConfigured()){
+            return autoChooser.getSelected();
+        }
+        else{
+            return Commands.none();
+        }
 
     }
 }

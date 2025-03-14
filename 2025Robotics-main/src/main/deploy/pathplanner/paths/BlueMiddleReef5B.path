@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.050145780487851,
-        "y": 4.109417762578156
+        "x": 7.05002658991326,
+        "y": 4.1225
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 4.1225
       },
       "prevControl": {
-        "x": 6.976703393212547,
-        "y": 4.103933892578772
+        "x": 6.976872546618046,
+        "y": 4.1225
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.73407213120933
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "BlueScoringAutos",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -0.9071073784305657
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

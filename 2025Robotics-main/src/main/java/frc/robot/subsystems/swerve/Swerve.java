@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -114,11 +116,17 @@ public class Swerve extends SubsystemBase {
     }
 
     public final SysIdRoutine sysIdRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(),
+        new SysIdRoutine.Config(
+            // null,
+            // null,
+            // null,
+            // (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())
+        ),
         new SysIdRoutine.Mechanism(
             (Voltage voltage) -> {
                 for (SwerveModule mod : mSwerveMods) {
                     mod.getDriveMotor().setVoltage(voltage.in(Volts) / 4);
+                    Logger.recordOutput("Drive/SysIdVelocity", mod.getDriveMotor().getAppliedOutput());
                     // mod.getAngleMotor().setVoltage(voltage.in(Volts));
                 }
             },
@@ -144,8 +152,8 @@ public class Swerve extends SubsystemBase {
         return sysIdRoutine.quasistatic(direction);
     }
 
-    public Command sysIdDynamic(SysIdRoutine.Direction directon) {
-        return sysIdRoutine.dynamic(directon);
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.dynamic(direction);
     }
 
     private ChassisSpeeds correctForDynamics(ChassisSpeeds originalSpeeds) {
@@ -163,19 +171,22 @@ public class Swerve extends SubsystemBase {
                 twistForPose.dtheta / LOOP_TIME_S);
         return updatedSpeeds;
     }
+    
 
 
-    public void autoDrive(ChassisSpeeds desiredChassisSpeeds) {
+    public void driveRobotRelative(ChassisSpeeds desiredChassisSpeeds) {
         
         SmartDashboard.putNumber("desired vx (m/s)", desiredChassisSpeeds.vxMetersPerSecond);
 
         // general swerve speeds --> speed per module
-        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(desiredChassisSpeeds, 0.02);
-        swerveModuleStates = SwerveConfig.swerveKinematics.toSwerveModuleStates(discreteSpeeds); 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConfig.maxSpeed);
+        // ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(desiredChassisSpeeds, 0.02);
+        swerveModuleStates = SwerveConfig.swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds); 
+        // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConfig.maxSpeed);
         // toSwerveModuleStates(fieldRelativeSpeeds)
         setModuleStates(swerveModuleStates);
       }
+
+
 
     public void teleopDrive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         desiredChassisSpeeds =
@@ -241,6 +252,7 @@ public class Swerve extends SubsystemBase {
     
     public ChassisSpeeds getRobotRelativeSpeeds(){
         return SwerveConfig.swerveKinematics.toChassisSpeeds(getModuleStates());
+        // return ChassisSpeeds.fromFieldRelativeSpeeds(SwerveConfig.swerveKinematics.toChassisSpeeds(getModuleStates()));
     }
 
     public void zeroGyro(double deg) {

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ps5Rumble;
 // import frc.robot.commands.TopTilt;
@@ -182,10 +183,10 @@ public class RobotContainer {
 
         //square.onTrue(s_Swerve.sysIdDynamic(s_Swerve.sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward)));
         // why?
-        // square.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        // circle.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        // triangle.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        // cross.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        square.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        circle.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        triangle.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        cross.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         
         // cross.onFalse(new InstantCommand(() -> m_Arm.stopRetract()));
 

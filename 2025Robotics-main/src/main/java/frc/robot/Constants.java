@@ -22,9 +22,8 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
     public static final double ps5RumbleWarningTime = 10; // IN SECONDS
 
-    
     public static final double ROBOT_MASS_KG = 22.73;
-    public static final double ROBOT_RADIUS_M = 0.349;
+    public static final double ROBOT_RADIUS_M = 0.34925;
     public static final double ROBOT_MOI = 0.5 * ROBOT_MASS_KG * Math.pow(ROBOT_RADIUS_M, 2);
     public static final ModuleConfig MODULE_CONFIG = 
         new ModuleConfig(0.051, 2, 1.2, DCMotor.getNeoVortex(1).withReduction(6.75), 60, ROBOT_MASS_KG, 1);
@@ -103,8 +102,8 @@ public final class Constants {
 
     public static class ArmConstants{
 
-        public static final int armFollowMotorPort = 10;
-        public static final int armBaseMotorPort = 11;
+        public static final int armFollowMotorPort = 11;
+        public static final int armBaseMotorPort = 10;
         public static final int armExtendMotorPort = 12;
         // public static final int armWristMotorPort = 16;
     
@@ -162,8 +161,8 @@ public final class Constants {
 
         public static final String ioExceptionError = "ERROR_GETTING_AUTO/PATH";
         
-        public static final double kMaxSpeedMetersPerSecond = 9; // Set from 2024Robotics code, probably have to change
-        public static final double kMaxAccelerationMetersPerSecondSquared = 6; // Set from 2024Robotics code, probably have to change
+        public static final double kMaxSpeedMetersPerSecond = 5; // Set from 2024Robotics code, probably have to change
+        public static final double kMaxAccelerationMetersPerSecondSquared = 5; // Set from 2024Robotics code, probably have to change
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; // Set from 2024Robotics code, probably have to change
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; // Set from 2024Robotics code, probably have to change
 
