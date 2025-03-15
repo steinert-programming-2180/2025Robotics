@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.ps5Rumble;
 // import frc.robot.commands.TopTilt;
@@ -45,7 +46,6 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve(m_Limelight);
     private final PoseEstimator m_PoseEstimator = new PoseEstimator(s_Swerve);
     private final Endgame climber=new Endgame();
-    private final Auto m_Auto = new Auto(s_Swerve, m_PoseEstimator);
     // private final IntakeReverse m_IntakeReverse = new IntakeReverse(m_Arm);
     // private final IntakeForward m_IntakeForward = new IntakeForward(m_Arm);
     
@@ -55,6 +55,7 @@ public class RobotContainer {
     
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    private final Joystick operator = new Joystick(1);
     // private final CommandPS5Controller PS5Controller=new CommandPS5Controller(OperatorConstants.PS5ControllerPort);
 
    /* Driver Controls */
@@ -79,23 +80,24 @@ public class RobotContainer {
     private final JoystickButton leftTrigger = new JoystickButton(driver, PS5Controller.Button.kL2.value);
     private final JoystickButton rightTrigger = new JoystickButton(driver, PS5Controller.Button.kR2.value);
 
-    private final JoystickButton xBoxrightBumper = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton xBoxLeftBumper = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton xBoxrightBumper = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+    private final JoystickButton xBoxLeftBumper = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
 
     private final JoystickButton square = new JoystickButton(driver, PS5Controller.Button.kSquare.value);
     private final JoystickButton triangle = new JoystickButton(driver, PS5Controller.Button.kTriangle.value);
     private final JoystickButton circle = new JoystickButton(driver, PS5Controller.Button.kCircle.value);
     private final JoystickButton cross = new JoystickButton(driver, PS5Controller.Button.kCross.value);
 
-    private final JoystickButton xBoxAButton=new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton xBoxBButton=new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton xBoxXButton=new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton xBoxYButton=new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton xBoxAButton=new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton xBoxBButton=new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton xBoxXButton=new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton xBoxYButton=new JoystickButton(operator, XboxController.Button.kY.value);
 
-    private final JoystickButton xBoxLeftStick=new JoystickButton(driver, XboxController.Button.kLeftStick.value);
-    private final JoystickButton xBoxRightStick=new JoystickButton(driver, XboxController.Button.kRightStick.value);
+    private final JoystickButton xBoxLeftStick=new JoystickButton(operator, XboxController.Button.kLeftStick.value);
+    private final JoystickButton xBoxRightStick=new JoystickButton(operator, XboxController.Button.kRightStick.value);
 
     private final Arm m_Arm = new Arm(leftBumper, rightBumper); 
+    private final Auto m_Auto = new Auto(s_Swerve, m_PoseEstimator, m_Arm);
 
     // private final SetBaseToAngle setBase40Degrees = new SetBaseToAngle(m_Arm, 40.0);
     // private final SetBaseToAngle setBase180Degrees = new SetBaseToAngle(m_Arm, 180);
@@ -103,7 +105,7 @@ public class RobotContainer {
     // private final SetBaseToAngle setBase360Degrees = new SetBaseToAngle(m_Arm, 360);
     
     public static final CommandPS5Controller m_ps5driverController = new CommandPS5Controller(Constants.OperatorConstants.PS5ControllerPort);
-    CommandXboxController m_LimelightController = new CommandXboxController(1);
+    CommandXboxController xBoxController = new CommandXboxController(1);
 
     /* Subsystems */
 
@@ -148,8 +150,6 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-
-        CommandXboxController xBoxController = new CommandXboxController(1);
         // new Trigger(LimeController::getYButtonPressed).onTrue(new IncrementServo(m_Limelight));
 
 
@@ -187,6 +187,9 @@ public class RobotContainer {
         circle.onTrue(s_Swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         triangle.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         cross.onTrue(s_Swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+        // xBoxController.x().whileTrue(new InstantCommand(() -> m_Arm.raiseArm())).whileFalse(new InstantCommand(() -> m_Arm.stopRotating()));
+        // xBoxController.x().toggleOnTrue(new InstantCommand(() -> m_Arm.lowerArm())).toggleOnFalse(new InstantCommand(() -> m_Arm.stopRotating()));
         
         // cross.onFalse(new InstantCommand(() -> m_Arm.stopRetract()));
 
@@ -212,20 +215,21 @@ public class RobotContainer {
         // triangle.onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(45)));
 
         //reef lvl 3
-        xBoxBButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(75)));
+        xBoxBButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(45)));
         //reef lvl 1
-        xBoxXButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(30)));
+        // xBoxXButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(15)));
+        xBoxXButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(15)));
         //reef lvl 2
-        xBoxAButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(50)));
+        xBoxAButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(30)));
         //reef lvl 4
-        xBoxYButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(90)));
+        xBoxYButton.onTrue(new InstantCommand(() -> m_Arm.setAngle(60)));
         //human player station
-        xBoxController.start().onTrue(new InstantCommand(() -> m_Arm.setAngle(65)));
+        xBoxController.start().onTrue(new InstantCommand(() -> m_Arm.setAngle(75)));
         
         //extend
-        xBoxLeftBumper.toggleOnTrue(new InstantCommand(() -> m_Arm.retractArm())).toggleOnFalse(new InstantCommand(() -> m_Arm.stopRetract()));
+        leftBumper.toggleOnTrue(new InstantCommand(() -> m_Arm.lowerArm())).toggleOnFalse(new InstantCommand(() -> m_Arm.stopRotating()));
         //retract
-        xBoxrightBumper.toggleOnTrue(new InstantCommand(() -> m_Arm.extendArm())).toggleOnFalse(new InstantCommand(() -> m_Arm.stopRetract()));
+        rightBumper.toggleOnTrue(new InstantCommand(() -> m_Arm.raiseArm())).toggleOnFalse(new InstantCommand(() -> m_Arm.stopRotating()));
 
         // //high reef pegs
         // xBoxController.povUp().onTrue(new InstantCommand(() -> m_Wrist.rotateTheWrist(100)));

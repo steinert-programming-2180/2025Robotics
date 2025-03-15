@@ -24,7 +24,7 @@ public class SwerveConfig
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(22.5); 
     public static final double wheelBase = Units.inchesToMeters(22.5); 
-    public static final double wheelCircumference = chosenModule.wheelCircumference;
+    public static final double wheelCircumference = Units.inchesToMeters(4.0 * Math.PI);
 
 
     /* Swerve Kinematics 
@@ -78,9 +78,9 @@ public class SwerveConfig
     public static final double angleKA = 0.0008773;
 
     /* Angle Motor PID Values */
-    public static final double angleKP = 0.005;
+    public static final double angleKP = 0.012;
     public static final double angleKI = 0;
-    public static final double angleKD = 0.001;
+    public static final double angleKD = 0.002;
     public static final double angleKF = 0;
 
     /* Drive Motor PID Values */

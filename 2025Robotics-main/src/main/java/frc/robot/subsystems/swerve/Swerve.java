@@ -53,6 +53,7 @@ public class Swerve extends SubsystemBase {
 
     private ChassisSpeeds desiredChassisSpeeds;
     private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4]; 
+    private SwerveMod frontLeft, frontRight, backLeft, backRight;
     private Limelight m_Limelight;
     private ChassisSpeeds updatedSpeeds;
     private Twist2d twistForPose;
@@ -89,19 +90,18 @@ public class Swerve extends SubsystemBase {
         // );
         
 
-        mSwerveMods = new SwerveMod[] {
         
-            new SwerveMod(0, SwerveConstants.Swerve.Mod0.constants),
-            new SwerveMod(1, SwerveConstants.Swerve.Mod1.constants),
-            new SwerveMod(2, SwerveConstants.Swerve.Mod2.constants),
-            new SwerveMod(3, SwerveConstants.Swerve.Mod3.constants)
 
+        frontLeft = new SwerveMod(0, SwerveConstants.Swerve.Mod0.constants);
+        frontRight = new SwerveMod(1, SwerveConstants.Swerve.Mod1.constants);
+        backLeft = new SwerveMod(2, SwerveConstants.Swerve.Mod2.constants);
+        backRight = new SwerveMod(3, SwerveConstants.Swerve.Mod3.constants);
 
-            
+        mSwerveMods = new SwerveMod[] {
+            frontLeft, frontRight, backLeft, backRight
         };
 
-
-        swerveOdometry = new SwerveDriveOdometry(SwerveConfig.swerveKinematics, Rotation2d.fromDegrees(gyro.getAngle()), getModulePositions());
+        swerveOdometry = new SwerveDriveOdometry(SwerveConfig.swerveKinematics, getYaw(), getModulePositions());
         zeroGyro();
 
 
@@ -177,6 +177,7 @@ public class Swerve extends SubsystemBase {
     public void driveRobotRelative(ChassisSpeeds desiredChassisSpeeds) {
         
         SmartDashboard.putNumber("desired vx (m/s)", desiredChassisSpeeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("desired vy (m/s)", desiredChassisSpeeds.vyMetersPerSecond);
 
         // general swerve speeds --> speed per module
         // ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(desiredChassisSpeeds, 0.02);
@@ -251,7 +252,12 @@ public class Swerve extends SubsystemBase {
     }
     
     public ChassisSpeeds getRobotRelativeSpeeds(){
-        return SwerveConfig.swerveKinematics.toChassisSpeeds(getModuleStates());
+        return SwerveConfig.swerveKinematics.toChassisSpeeds(
+            frontLeft.getState(),
+            frontRight.getState(),
+            backLeft.getState(),
+            backRight.getState()
+        );
         // return ChassisSpeeds.fromFieldRelativeSpeeds(SwerveConfig.swerveKinematics.toChassisSpeeds(getModuleStates()));
     }
 

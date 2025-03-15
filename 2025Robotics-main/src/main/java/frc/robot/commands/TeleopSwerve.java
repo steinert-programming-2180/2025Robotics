@@ -38,9 +38,9 @@ public class TeleopSwerve extends Command {
         strafeVal = 0.0;
         rotationVal = 0.0;
 
-        rotationController = new PIDController(1, 0, 0);
+        rotationController = new PIDController(1.75, 0, 0.1);
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
-        rotationController.setTolerance(0.01);
+        rotationController.setTolerance(0.1);
 
         this.translationSup = translationSup;
         this.strafeSup = strafeSup;

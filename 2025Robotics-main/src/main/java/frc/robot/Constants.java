@@ -24,9 +24,10 @@ public final class Constants {
 
     public static final double ROBOT_MASS_KG = 22.73;
     public static final double ROBOT_RADIUS_M = 0.34925;
-    public static final double ROBOT_MOI = 0.5 * ROBOT_MASS_KG * Math.pow(ROBOT_RADIUS_M, 2);
+    // public static final double ROBOT_MOI = 0.5 * ROBOT_MASS_KG * Math.pow(ROBOT_RADIUS_M, 2);
+    public static final double ROBOT_MOI = 11.28;
     public static final ModuleConfig MODULE_CONFIG = 
-        new ModuleConfig(0.051, 2, 1.2, DCMotor.getNeoVortex(1).withReduction(6.75), 60, ROBOT_MASS_KG, 1);
+        new ModuleConfig(0.051, 5, 1.2, DCMotor.getNeoVortex(1).withReduction(5.9), 60, 1);
     
     public static final RobotConfig PP_CONFIG = 
         new RobotConfig(ROBOT_MASS_KG, ROBOT_MOI, MODULE_CONFIG, getModuleTranslations());
@@ -113,11 +114,13 @@ public final class Constants {
         public static final double intakeSpeed = 0.8;
         public static final double algaeSpeed = 0.75;
 
+        public static final double armAngleOffset=116;
+
     
         ////////////////////////////////////////////////
-        public static final double armBaseP=0.06;
+        public static final double armBaseP=0.045;
         public static final double armBaseI=0.000000007;
-        public static final double armBaseD=0.22;
+        public static final double armBaseD=9.5;
         ////////////////////////////////////////////////
     
         public static final double armExtendP=0.05;
@@ -128,7 +131,7 @@ public final class Constants {
         public static final double armWristI=0;
         public static final double armWristD=0;
 
-        public static final double armZeroPos=78.0; // CHANGE THIS, MEASURE!!!
+        public static final double armZeroPos=armAngleOffset; // CHANGE THIS, MEASURE!!!
 
         public static final int bottomLimitSwitchID=0;
         public static final int topLimitSwitchID=999;

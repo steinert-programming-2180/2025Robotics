@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -89,7 +90,7 @@ public class Arm  extends SubsystemBase{
 
     private void configMotors(){
         armBaseConfig
-        .inverted(false)
+        .inverted(true)
         .idleMode(IdleMode.kBrake)
         .closedLoopRampRate(0.2);
 
@@ -106,7 +107,7 @@ public class Arm  extends SubsystemBase{
 
         
         // armFollowConfig.inverted(true);
-        armFollowConfig.follow(armBaseMotor, true);
+        armFollowConfig.follow(armBaseMotor, false); // i'm the devil
         armFollowConfig.idleMode(IdleMode.kBrake);
 
         armFollowMotor.configure(armFollowConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -153,20 +154,20 @@ public class Arm  extends SubsystemBase{
         SmartDashboard.putNumber("Arm Rotate Angle", getAngle());
         SmartDashboard.putNumber("Arm Rotate Error", getAngle() - armBaseMotor.getAbsoluteEncoder().getPosition());
         SmartDashboard.putBoolean("B Limit Switch", atBottomLimit());
-        SmartDashboard.putNumber("PID output", armBaseMotor.getAppliedOutput());
+        // SmartDashboard.putNumber("PID output", armBaseMotor.getAppliedOutput());
 
-        power=armBaseMotor.get();
+        // power=armBaseMotor.get();
 
-        if (!(leftBumper.getAsBoolean() || rightBumper.getAsBoolean())) {
-            power = 0.0;
-        } else if (leftBumper.getAsBoolean()) {
-            power = baseArmSpeed;
-        } else {
-            power = -baseArmSpeed;
-        }
+        // if (!(leftBumper.getAsBoolean() || rightBumper.getAsBoolean())) {
+        //     power = 0.0;
+        // } else if (leftBumper.getAsBoolean()) {
+        //     power = baseArmSpeed;
+        // } else {
+        //     power = -baseArmSpeed;
+        // }
         
-        if (atBottomLimit() && power < 0) {
-            power = 0.0;
+        if (atBottomLimit() && power > 0) {
+            stopRotating();
         }
 
         // rotate(power);
@@ -183,9 +184,9 @@ public class Arm  extends SubsystemBase{
 
     public void rotate(double power) {
 
-        // if (Math.abs(power) < 0.01) {
-        //     power = 0.0;
-        // }
+        if (Math.abs(power) < 0.01) {
+            power = 0.0;
+        }
 
         this.power = power;
 
@@ -193,16 +194,15 @@ public class Arm  extends SubsystemBase{
     }
 
     public void setAngle(double angle) {
-        if (!atBottomLimit() || angle > 30.0) {
 
-            armBaseMotor.getClosedLoopController().setReference(
-            //Normal PID stuff
-            angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, 
-            //FeedForward :(
-            Math.cos(getAngle() - ArmConstants.armZeroPos + 90) * 0.05, ArbFFUnits.kPercentOut);
-        } else {
-            armBaseMotor.set(0.0);
-        }
+        armBaseMotor.getClosedLoopController().setReference(
+        //Normal PID stuff
+        ArmConstants.armAngleOffset - angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, 
+        //FeedForward :(
+        Math.cos(ArmConstants.armAngleOffset - getAngle()) * 0.01, ArbFFUnits.kPercentOut);
+
+        SmartDashboard.putNumber("Arm PID Output", armBaseMotor.get());
+        
 
         // Math.sin(angle - getAngle()) / 4, ArbFFUnits.kPercentOut);
     }
@@ -212,7 +212,8 @@ public class Arm  extends SubsystemBase{
     }
 
     public void stopRotating() {
-        armBaseMotor.set(0.0);
+        // armBaseMotor.set(0.0);
+        rotate(0.0);
     }
 
     public void retractArm(){
@@ -232,6 +233,12 @@ public class Arm  extends SubsystemBase{
     }
 
     public void raiseArm(){
-        armBaseMotor.set(0.5);
+        // armBaseMotor.set(0.5);
+        rotate(-0.5);
+    }
+
+    public void lowerArm() {
+        // armBaseMotor.set(-0.3);
+        rotate(0.3);
     }
 }

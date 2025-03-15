@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 5.957889344262295,
+        "y": 4.1225
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 6.207889344262295,
+        "y": 4.1225
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "BlueMiddleReef5EndPoint"
     },
     {
       "anchor": {
-        "x": 3.5483606557377048,
-        "y": 6.11685450819672
+        "x": 5.957889344262295,
+        "y": 4.1225
       },
       "prevControl": {
-        "x": 2.5483606557377048,
-        "y": 6.11685450819672
+        "x": 5.708274255960942,
+        "y": 4.10863249509437
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "test1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -179.0289780689209
   },
   "reversed": false,
   "folder": null,

@@ -341,7 +341,7 @@ public class SwerveMod implements SwerveModule
     public SwerveModuleState getState()
     {
         return new SwerveModuleState(
-            driveEncoder.getVelocity(),
+            driveEncoder.getVelocity() * SwerveConfig.driveRpmToMetersPerSecond,
             getAngle()
         ); 
     }

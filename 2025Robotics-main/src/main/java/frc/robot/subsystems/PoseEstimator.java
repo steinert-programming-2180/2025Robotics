@@ -18,7 +18,7 @@ public class PoseEstimator extends SubsystemBase {
   public SwerveDrivePoseEstimator sEstimator;
   public Pose2d visionPose = new Pose2d();
   private frc.robot.subsystems.swerve.Swerve m_Swerve;
-  private Rotation2d rawGyroRotation = new Rotation2d();
+  public Rotation2d rawGyroRotation = new Rotation2d();
 
 
   
@@ -28,14 +28,12 @@ public class PoseEstimator extends SubsystemBase {
       SwerveConfig.swerveKinematics,
       rawGyroRotation,
       lastModulePositions,
-      new Pose2d(),
-      Constants.PoseEstimator.stateStdDevs,
-      Constants.PoseEstimator.VisionStdDevs
+      new Pose2d()
     );
 
   }
 
-  private SwerveModulePosition[] lastModulePositions = new SwerveModulePosition[]{
+  public SwerveModulePosition[] lastModulePositions = new SwerveModulePosition[]{
     new SwerveModulePosition(), 
     new SwerveModulePosition(),
     new SwerveModulePosition(),
