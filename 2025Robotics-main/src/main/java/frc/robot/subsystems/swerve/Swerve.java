@@ -217,7 +217,7 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxSpeed);
         
         for(SwerveMod mod : mSwerveMods){
-            mod.setDesiredState(desiredStates[mod.getModuleNumber()], true);
+            mod.setDesiredState(desiredStates[mod.getModuleNumber()]);
         }
     }  
     // public ChassisSpeeds getRobotRelativSpeeds(){

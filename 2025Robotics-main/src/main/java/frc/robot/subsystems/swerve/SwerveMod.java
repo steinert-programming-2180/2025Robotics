@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -221,6 +222,7 @@ public class SwerveMod implements SwerveModule
     }
     */
 
+    
     @Override
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop)
     {
@@ -232,7 +234,7 @@ public class SwerveMod implements SwerveModule
         desiredState = this.optimize(desiredState, getState().angle.minus(Rotation2d.fromDegrees(180)));
 
         
-        setSpeed(desiredState, isOpenLoop);
+        setSpeed(desiredState);
         setAngle(desiredState);
 
 
@@ -247,7 +249,32 @@ public class SwerveMod implements SwerveModule
         }
     }
 
-    private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop)
+    public void setDesiredState(SwerveModuleState desiredState)
+    {
+        
+        
+        // CTREModuleState functions for any motor type.
+        // desiredState = CTREModuleState.optimize(desiredState, getState().angle);
+        
+        desiredState = this.optimize(desiredState, getState().angle.minus(Rotation2d.fromDegrees(180)));
+
+        
+        setSpeed(desiredState);
+        setAngle(desiredState);
+
+
+        if(mDriveMotor.getFaults().sensor)
+        {
+            DriverStation.reportWarning("Sensor Fault on Drive Motor ID: " + mDriveMotor.getDeviceId(), false);
+        }
+
+        if(mAngleMotor.getFaults().sensor)
+        {
+            DriverStation.reportWarning("Sensor Fault on Angle Motor ID: " + mAngleMotor.getDeviceId(), false);
+        }
+    }
+
+    private void setSpeed(SwerveModuleState desiredState)
     {
         // if(isOpenLoop)
         // {
@@ -258,7 +285,8 @@ public class SwerveMod implements SwerveModule
         // }
 
         velocity = desiredState.speedMetersPerSecond;
-        mDriveMotor.getClosedLoopController().setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+        mDriveMotor.getClosedLoopController().setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
+                                                            12.0 / 6.18 * velocity);
         // mDriveMotor.set(speedController.calculate(getDriveMotor().get() * SwerveConfig.maxSpeed, velocity));
         
     }
