@@ -29,6 +29,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -41,6 +43,7 @@ import frc.robot.Constants;
 import frc.robot.SwerveConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.swerve.GyroIO.GyroIOInputs;
 
 
 public class Swerve extends SubsystemBase {
@@ -62,9 +65,20 @@ public class Swerve extends SubsystemBase {
     PIDController xController = new PIDController(0, 0, 0);
     PIDController yController = new PIDController(0, 0, 0);
     ProfiledPIDController thetaController = new ProfiledPIDController(0, 0, 0, null);
+    
+    private final GyroIO gyroIO;
+    private final GyroIOInputs gyroInputs = new GyroIOInputs();
+
+    final StructArrayPublisher<SwerveModuleState> desiredStateLogger =
+        NetworkTableInstance.getDefault().getStructArrayTopic("DesiredState",
+        SwerveModuleState.struct).publish();
+    final StructArrayPublisher<SwerveModuleState> actualStateLogger =
+        NetworkTableInstance.getDefault().getStructArrayTopic("ActualState",
+        SwerveModuleState.struct).publish();
 
     
-    public Swerve(Limelight m_Limelight) {
+    public Swerve(GyroIO gyroIO, Limelight m_Limelight) {
+        this.gyroIO = gyroIO;
         this.m_Limelight = m_Limelight;
         this.m_Config = Constants.PP_CONFIG;
 
@@ -219,6 +233,9 @@ public class Swerve extends SubsystemBase {
         for(SwerveMod mod : mSwerveMods){
             mod.setDesiredState(desiredStates[mod.getModuleNumber()]);
         }
+
+        desiredStateLogger.set(desiredStates);
+        actualStateLogger.set(getModuleStates());
     }  
     // public ChassisSpeeds getRobotRelativSpeeds(){
     //     return SwerveConfig.swerveKinematics.toChassisSpeeds(swerveModuleStates);

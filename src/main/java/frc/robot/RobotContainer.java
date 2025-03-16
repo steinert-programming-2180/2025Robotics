@@ -30,6 +30,7 @@ import frc.robot.subsystems.Endgame;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -43,7 +44,7 @@ public class RobotContainer {
     
     private final Wrist m_Wrist = new Wrist();
     private final Limelight m_Limelight = new Limelight();
-    private final Swerve s_Swerve = new Swerve(m_Limelight);
+    private final Swerve s_Swerve = new Swerve(new GyroIO() {}, m_Limelight);
     private final PoseEstimator m_PoseEstimator = new PoseEstimator(s_Swerve);
     private final Endgame climber=new Endgame();
     // private final IntakeReverse m_IntakeReverse = new IntakeReverse(m_Arm);
