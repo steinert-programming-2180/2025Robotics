@@ -6,6 +6,9 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -25,12 +28,14 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.swerve.SwerveModule;
 // import edu.wpi.first.cameraserver.CameraServer;
+import frc.robot.util.LocalADStarAK;
 
 import static edu.wpi.first.units.Units.Feet;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 
@@ -122,24 +127,35 @@ public class Auto extends SubsystemBase{
 
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
-            m_Estimator::getPose, // Robot pose supplier
-            m_Estimator::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
-            m_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            m_Swerve::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5, 0.0, 0) // Rotation PID constants (old 0.03)
-            ),
-            config, 
-            () -> {
-                var alliance = DriverStation.getAlliance();
-                if(alliance.isPresent()){
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return true;
-            }, 
-            m_Swerve
-        );
+                m_Estimator::getPose, // Robot pose supplier
+                m_Estimator::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
+                m_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                m_Swerve::runVelocity, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                        new PIDConstants(5, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5, 0.0, 0) // Rotation PID constants (old 0.03)
+                ),
+                config, 
+                () -> {
+                    var alliance = DriverStation.getAlliance();
+                    if(alliance.isPresent()){
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return true;
+                }, 
+                m_Swerve
+            );
+
+            Pathfinding.setPathfinder(new LocalADStarAK());
+            PathPlannerLogging.setLogActivePathCallback(
+                (activePath) -> {
+                    Logger.recordOutput(
+                        "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+                });
+            PathPlannerLogging.setLogTargetPoseCallback(
+                (targetPose) -> {
+                    Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+                });
         } catch (Exception ex){
             DriverStation.reportError("Failed to load pathplanner config and configure autobuilder", ex.getStackTrace());
         }
