@@ -127,8 +127,8 @@ public class Auto extends SubsystemBase{
 
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
-                m_Estimator::getPose, // Robot pose supplier
-                m_Estimator::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
+                m_Swerve::getPose, // Robot pose supplier
+                m_Swerve::resetOdometry,    // Method to reset odometry (will be called if your auto has a starting pose)
                 m_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 m_Swerve::runVelocity, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains

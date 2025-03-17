@@ -35,6 +35,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -50,7 +51,6 @@ import frc.robot.Constants.Mode;
 import frc.robot.SwerveConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.swerve.GyroIO.GyroIOInputs;
 
 
 public class Swerve extends SubsystemBase {
@@ -90,6 +90,9 @@ public class Swerve extends SubsystemBase {
 
     private final Module[] modules = new Module[4]; // FL, FR, BL, BR
 
+    public StructPublisher<Pose2d> currentPose = 
+        NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
+
     final StructArrayPublisher<SwerveModuleState> desiredStateLogger =
         NetworkTableInstance.getDefault().getStructArrayTopic("DesiredState",
         SwerveModuleState.struct).publish();
@@ -98,7 +101,9 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState.struct).publish();
 
     
-    public Swerve(GyroIO gyroIO, Limelight m_Limelight, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO) {
+    public Swerve(GyroIO gyroIO, Limelight m_Limelight, ModuleIOSim flModuleIO, ModuleIOSim frModuleIO, ModuleIOSim blModuleIO, ModuleIOSim brModuleIO) {
+
+        currentPose.set(new Pose2d(7.5, 4.0, new Rotation2d(Math.toRadians(0.0))));
 
         this.gyroIO = gyroIO;
         modules[0] = new Module(flModuleIO, 0);
@@ -195,21 +200,21 @@ public class Swerve extends SubsystemBase {
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("Drive/Gyro", gyroInputs);
         for (var module : modules) {
-        module.periodic();
+            module.periodic();
         }
         odometryLock.unlock();
 
         // Stop moving when disabled
         if (DriverStation.isDisabled()) {
-        for (var module : modules) {
-            module.stop();
-        }
+            for (var module : modules) {
+                module.stop();
+            }
         }
 
         // Log empty setpoint states when disabled
         if (DriverStation.isDisabled()) {
-        Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
-        Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
+            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
+            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
         }
 
         // Update odometry
@@ -217,36 +222,37 @@ public class Swerve extends SubsystemBase {
             modules[0].getOdometryTimestamps(); // All signals are sampled together
         int sampleCount = sampleTimestamps.length;
         for (int i = 0; i < sampleCount; i++) {
-        // Read wheel positions and deltas from each module
-        SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
-        SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
-        for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
-            modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
-            moduleDeltas[moduleIndex] =
-                new SwerveModulePosition(
-                    modulePositions[moduleIndex].distanceMeters
-                        - lastModulePositions[moduleIndex].distanceMeters,
-                    modulePositions[moduleIndex].angle);
-            lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
-        }
+            // Read wheel positions and deltas from each module
+            SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+            SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
+            for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
+                modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
+                moduleDeltas[moduleIndex] =
+                    new SwerveModulePosition(
+                        modulePositions[moduleIndex].distanceMeters
+                            - lastModulePositions[moduleIndex].distanceMeters,
+                        modulePositions[moduleIndex].angle);
+                lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
+            }
 
-        // Update gyro angle
-        if (gyroInputs.connected) {
-            // Use the real gyro angle
-            rawGyroRotation = gyroInputs.odometryYawPositions[i];
-        } else {
-            // Use the angle delta from the kinematics and module deltas
-            Twist2d twist = SwerveConfig.swerveKinematics.toTwist2d(moduleDeltas);
-            rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
-        }
+            // Update gyro angle
+            if (gyroInputs.connected) {
+                // Use the real gyro angle
+                rawGyroRotation = gyroInputs.odometryYawPositions[i];
+            } else {
+                // Use the angle delta from the kinematics and module deltas
+                Twist2d twist = SwerveConfig.swerveKinematics.toTwist2d(moduleDeltas);
+                rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
+            }
 
-        // Apply update
-        poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+            // Apply update
+            poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
         }
 
         // Update gyro alert
         gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
 
+        currentPose.set(poseEstimator.getEstimatedPosition());
     }
 
     public void driveRobotRelative(ChassisSpeeds desiredChassisSpeeds) {
@@ -372,6 +378,14 @@ public class Swerve extends SubsystemBase {
 
     public Rotation2d getYaw() {
         return (SwerveConfig.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getAngle()) : Rotation2d.fromDegrees(gyro.getAngle());
+    }
+
+    public Pose2d getPose() {
+        return poseEstimator.getEstimatedPosition();
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        poseEstimator.resetPosition(rawGyroRotation, this.getModulePositions(), pose);
     }
 
     

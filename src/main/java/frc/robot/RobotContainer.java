@@ -2,6 +2,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -32,6 +33,7 @@ import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swerve.GyroIO;
 import frc.robot.subsystems.swerve.ModuleIO;
+import frc.robot.subsystems.swerve.ModuleIOSim;
 import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -45,7 +47,7 @@ public class RobotContainer {
     
     private final Wrist m_Wrist = new Wrist();
     private final Limelight m_Limelight = new Limelight();
-    private final Swerve s_Swerve = new Swerve(new GyroIO() {}, m_Limelight, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+    private final Swerve s_Swerve = new Swerve(new GyroIO() {}, m_Limelight, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
     private final PoseEstimator m_PoseEstimator = new PoseEstimator(s_Swerve);
     private final Endgame climber=new Endgame();
     // private final IntakeReverse m_IntakeReverse = new IntakeReverse(m_Arm);
@@ -268,9 +270,5 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return m_Auto.getAutoCommand(); 
-    }
-
-    public Pose2d getCurrentPose() {
-        return m_PoseEstimator.getPose();
     }
 }
