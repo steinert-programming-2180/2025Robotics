@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 9.984000000000002,
+        "y": 1.9189999999999998
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 11.070311203023156,
+        "y": 1.918755452157714
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 12.43125,
+        "y": 2.6643954918032784
+      },
+      "prevControl": {
+        "x": 12.071618852459016,
+        "y": 2.1848872950819667
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.2,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 59.74356283647089
+  },
+  "reversed": false,
+  "folder": "RedScoringAutos",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.2703555689533828
+  },
+  "useDefaultConstraints": true
+}

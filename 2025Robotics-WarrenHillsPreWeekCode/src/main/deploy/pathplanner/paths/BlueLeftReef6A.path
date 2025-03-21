@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.034,
+        "y": 6.189500000000001
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.249750000000001,
+        "y": 6.2675
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.3527499999999995,
+        "y": 5.204749999999999
+      },
+      "prevControl": {
+        "x": 5.9670029480275675,
+        "y": 5.653245962456122
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BlueLeftReef6EndPoint"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.2,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -120.01836742760906
+  },
+  "reversed": false,
+  "folder": "BlueScoringAutos",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

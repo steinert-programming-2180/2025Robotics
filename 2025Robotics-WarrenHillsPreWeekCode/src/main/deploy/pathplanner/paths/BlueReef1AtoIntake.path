@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.89025,
+        "y": 5.34125
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8470000000000004,
+        "y": 5.94575
+      },
+      "isLocked": false,
+      "linkedName": "BlueReef1AEndPoint"
+    },
+    {
+      "anchor": {
+        "x": 1.4917500000000001,
+        "y": 7.164499999999999
+      },
+      "prevControl": {
+        "x": 2.83725,
+        "y": 6.189499999999999
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BlueIntakeLeft"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.2,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -53.36588612403257
+  },
+  "reversed": false,
+  "folder": "BlueConnectorPaths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -58.84069549165563
+  },
+  "useDefaultConstraints": true
+}

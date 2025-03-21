@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.957889344262295,
+        "y": 4.1225
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.207889344262295,
+        "y": 4.1225
+      },
+      "isLocked": false,
+      "linkedName": "BlueMiddleReef5EndPoint"
+    },
+    {
+      "anchor": {
+        "x": 5.957889344262295,
+        "y": 4.1225
+      },
+      "prevControl": {
+        "x": 5.708274255960942,
+        "y": 4.10863249509437
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.2,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -179.0289780689209
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,28 @@
+{
+    "name": "Phoenix",
+    "rotations": [
+      {
+        "axis": "x",
+        "degrees": 180
+  
+  
+      },
+      {
+        "axis": "y",
+        "degrees": 0
+      },
+  
+      {
+        "axis": "z",
+        "degrees":90
+  
+      }
+    ],
+    "position": [
+      -2.7326,
+      1.35,
+      -2.2
+    ],
+    "cameras": [],
+    "components":[]
+  }
